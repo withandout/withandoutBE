@@ -5,7 +5,8 @@
 
 <mapper namespace="com.ssafy.wao.model.dao.UserDao">
     <resultMap id="UserDtoMap" type="UserDto">
-        <id property="userId" column="user_id" />
+        <id property="userNo" column="user_no" />
+        <result property="userId" column="user_id"/>
         <result property="nickname" column="nickname"/>
         <result property="region" column="region"/>
         <result property="gender" column="gender"/>

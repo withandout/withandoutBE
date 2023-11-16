@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.wao.model.dao.PartyDao">
+    <resultMap id="PartyDtoMap" type="PartyDto">
+        <id property="partyNo" column="no_party" />
+        <result property="name" column="name"/>
+        <result property="sports" column="sports"/>
+        <result property="content" column="content"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="imgName" column="img_name"/>
+        <result property="sizeLimit" column="size_limit"/>
+        <result property="leadUserNo" column="fk-users-parties-no_user"/>
+    </resultMap>
+    <resultMap id="UserDtoMap" type="UserDto">
+        <id property="userNo" column="no_user" />
+        <result property="userId" column="user_id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="region" column="region"/>
+        <result property="gender" column="gender"/>
+        <result property="age" column="age"/>
+        <result property="isAuthorized" column="is_authorized"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="imgName" column="img_name"/>
+    </resultMap>
+    <resultMap id="EventDtoMap" type="EventDto">
+        <id property="eventNo" column="no_event"/>
+        <result property="startTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="partyNo" column="fk-parties-events-no_parties"/>
+    </resultMap>
+
+    <insert id="makeParty" parameterType="PartyDto" useGeneratedKeys="true" keyProperty="no_party">
+        INSERT INTO `wao_db`.`Parties`
+        (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `leadUserNo`)
+        VALUES
+        (#{name}, #{sports}, #{region}, #{content}, #{imgPath}, #{imgName}, #{sizeLimit}, #{leadUserNo})
+    </insert>
+
+    <insert id="insertPartyMember" parameterType="PartyDto">
+        <!-- isAccepted = 같이 넣어 줘야함. -->
+
+
+    </insert>
+    <!--  1개 파티 조회  -->
+    <select id="selectParty" parameterType="int" resultType="PartyDtoMap">
+        SELECT `name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `leadUserNo`
+        FROM `wao_db`.`Parties` p
+        WHERE p.no_party = #{partyNo}
+    </select>
+    <!--  전체 파티 조회  -->
+    <select id="selectEntireParty" resultType="PartyDtoMap">
+        SELECT `name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `leadUserNo`
+        FROM `wao_db`.`Parties`
+    </select>
+
+    <!--    -->
+    <select id="selectMembers" parameterType="int" resultType="PartyDtoMap">
+
+    </select>
+
+    <select id="selectLeader" parameterType="int" resultType="UserDto">
+
+    </select>
+
+    <select id="selectAllEvents">
+
+    </select>
+
+</mapper>

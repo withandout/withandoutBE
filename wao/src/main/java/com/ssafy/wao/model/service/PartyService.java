@@ -1,4 +1,4 @@
-package com.ssafy.wao.model.dao;
+package com.ssafy.wao.model.service;
 
 import com.ssafy.wao.model.dto.EventDto;
 import com.ssafy.wao.model.dto.PartyDto;
@@ -6,7 +6,7 @@ import com.ssafy.wao.model.dto.UserDto;
 
 import java.util.List;
 
-public interface PartyDao {
+public interface PartyService {
 
     /*
         파티를 만드는 기능입니다.
@@ -47,7 +47,7 @@ public interface PartyDao {
     /*
         파티넘버와 일치하는 파티의 정원수를 조회하는 기능입니다.
         partyNo를 받아서 size 값 반환
-     */
+    */
     public int getPartySize(int partyNo);
 
     public int insertPartyMember(PartyDto partyDto);
