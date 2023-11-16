@@ -32,7 +32,7 @@ public class UserRestController {
 
     @PostMapping("signup")
 
-    ResponseEntity<Void> signup(UserDto userDto, MultipartFile file) {
+    ResponseEntity<Void> signup(UserDto userDto, @RequestPart(required = false) MultipartFile file) {
         // multipartformdata 확인 (RequestBody 풀고) == Null 일 경우 default Path 주기.
 
         int res = 0;
