@@ -1,11 +1,20 @@
+-- -----------------------------------------------------
+-- Schema wao_db
+-- -----------------------------------------------------
 DROP SCHEMA IF EXISTS `wao_db` ;
 
--- CREATE DB withandout
+-- -----------------------------------------------------
+-- Schema wao_db
+-- -----------------------------------------------------
 CREATE SCHEMA IF NOT EXISTS `wao_db` DEFAULT CHARACTER SET utf8 ;
-
+-- -----------------------------------------------------
+-- Schema ssafy_withandout
+-- -----------------------------------------------------
 USE `wao_db` ;
 
--- CREATE schema USERS
+-- -----------------------------------------------------
+-- Table `wao_db`.`Users`
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS `wao_db`.`Users` ;
 
 CREATE TABLE IF NOT EXISTS `wao_db`.`Users` (
@@ -26,7 +35,10 @@ CREATE TABLE IF NOT EXISTS `wao_db`.`Users` (
   UNIQUE INDEX `nickname_UNIQUE` (`nickname` ASC) VISIBLE)
 ENGINE = InnoDB;
 
--- CREATE schema PARTIES
+
+-- -----------------------------------------------------
+-- Table `wao_db`.`Parties`
+-- -----------------------------------------------------
 DROP TABLE IF EXISTS `wao_db`.`Parties` ;
 
 CREATE TABLE IF NOT EXISTS `wao_db`.`Parties` (
@@ -38,64 +50,157 @@ CREATE TABLE IF NOT EXISTS `wao_db`.`Parties` (
   `img_path` VARCHAR(300) NULL,
   `img_name` VARCHAR(200) NULL,
   `size_limit` INT NOT NULL,
-  `fk-users-parties-no_user` INT NOT NULL,
+  `fk-users-parties-no_user` INT NULL,
   PRIMARY KEY (`no_party`),
   UNIQUE INDEX `no_party_UNIQUE` (`no_party` ASC) VISIBLE,
   UNIQUE INDEX `name_UNIQUE` (`name` ASC) VISIBLE,
-  INDEX `no_user_idx` (`fk-users-parties-no_user` ASC) VISIBLE,
-  CONSTRAINT `no_user`
+  INDEX `fk-users-parties-no_user_idx` (`fk-users-parties-no_user` ASC) VISIBLE,
+  CONSTRAINT `fk-users-parties-no_user`
     FOREIGN KEY (`fk-users-parties-no_user`)
-    REFERENCES `wao_db`.`users` (`no_user`)
+    REFERENCES `wao_db`.`Users` (`no_user`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
--- CREATE schema EVENTS 
-DROP TABLE IF EXISTS `wao_db`.`events` ;
+-- -----------------------------------------------------
+-- Table `wao_db`.`Events`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wao_db`.`Events` ;
 
-CREATE TABLE IF NOT EXISTS `wao_db`.`events` (
+CREATE TABLE IF NOT EXISTS `wao_db`.`Events` (
   `no_event` INT NOT NULL AUTO_INCREMENT,
-  `start_time` DATETIME NULL,
-  `end_time` DATETIME NULL,
-  `fk-parties-events-no_parties` INT NULL,
+  `start_time` DATETIME NOT NULL,
+  `end_time` DATETIME NOT NULL,
+  `fk-parties-events-no_party` INT NOT NULL,
   PRIMARY KEY (`no_event`),
-  UNIQUE INDEX `no_event_UNIQUE` (`no_event` ASC) VISIBLE,
-  INDEX `fk-parties-events-no_parties_idx` (`fk-parties-events-no_parties` ASC) VISIBLE,
-  CONSTRAINT `fk-parties-events-no_parties`
-    FOREIGN KEY (`fk-parties-events-no_parties`)
-    REFERENCES `wao_db`.`parties` (`no_party`)
+  UNIQUE INDEX `no_schedule_UNIQUE` (`no_event` ASC) VISIBLE,
+  INDEX `fk-parties-events-no_party_idx` (`fk-parties-events-no_party` ASC) VISIBLE,
+  CONSTRAINT `fk-parties-events-no_party`
+    FOREIGN KEY (`fk-parties-events-no_party`)
+    REFERENCES `wao_db`.`Parties` (`no_party`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
-DROP TABLE IF EXISTS `wao_db`.`users_and_parties` ;
+-- -----------------------------------------------------
+-- Table `wao_db`.`Users_Parties`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wao_db`.`Users_Parties` ;
 
-CREATE TABLE IF NOT EXISTS `wao_db`.`users_and_parties` (
-  `fk-parties-uap-no_party` INT NOT NULL,
-  `fk_users-uap-no_user` INT NOT NULL,
+CREATE TABLE IF NOT EXISTS `wao_db`.`Users_Parties` (
+  `fk-users_parties-no_party` INT NOT NULL,
+  `fk-users_parties-no_user` INT NOT NULL,
   `is_accepted` TINYINT NOT NULL DEFAULT 0,
-  `invited_date` DATETIME NULL,
+  `invited_date` DATETIME NOT NULL,
   `accepted_date` DATETIME NULL,
-  PRIMARY KEY (`fk-parties-uap-no_party`, `fk_users-uap-no_user`),
-  INDEX `fk_users-uap-no_user_idx` (`fk_users-uap-no_user` ASC) VISIBLE,
-  CONSTRAINT `fk-parties-uap-no_party`
-    FOREIGN KEY (`fk-parties-uap-no_party`)
-    REFERENCES `wao_db`.`parties` (`no_party`)
+  PRIMARY KEY (`fk-users_parties-no_party`, `fk-users_parties-no_user`),
+  CONSTRAINT `fk-users_parties-no_party2`
+    FOREIGN KEY (`fk-users_parties-no_party`)
+    REFERENCES `wao_db`.`Parties` (`no_party`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `fk_users-uap-no_user`
-    FOREIGN KEY (`fk_users-uap-no_user`)
-    REFERENCES `wao_db`.`users` (`no_user`)
+  CONSTRAINT `fk-users_parties-no_user2`
+    FOREIGN KEY (`fk-users_parties-no_user`)
+    REFERENCES `wao_db`.`Users` (`no_user`)
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
 
-SELECT * FROM `wao_db`.`users`;
+-- -----------------------------------------------------
+-- Table `wao_db`.`Users_Events`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wao_db`.`Users_Events` ;
 
-SELECT * FROM `wao_db`.`events`;
+CREATE TABLE IF NOT EXISTS `wao_db`.`Users_Events` (
+  `fk-users_events-no_user` INT NOT NULL,
+  `fk-users_events-no_event` INT NOT NULL,
+  PRIMARY KEY (`fk-users_events-no_user`, `fk-users_events-no_event`),
+  INDEX `fk-users_events-no_event_idx` (`fk-users_events-no_event` ASC) VISIBLE,
+  CONSTRAINT `fk-users_events-no_user`
+    FOREIGN KEY (`fk-users_events-no_user`)
+    REFERENCES `wao_db`.`Users` (`no_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk-users_events-no_event`
+    FOREIGN KEY (`fk-users_events-no_event`)
+    REFERENCES `wao_db`.`Events` (`no_event`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
 
+
+-- -----------------------------------------------------
+-- Table `wao_db`.`Articles`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `wao_db`.`Articles` ;
+
+CREATE TABLE IF NOT EXISTS `wao_db`.`Articles` (
+  `no_article` INT NOT NULL AUTO_INCREMENT,
+  `fk-users-articles-no_user` INT NOT NULL,
+  `fk-parties-articles-no_party` INT NOT NULL,
+  `content` TINYTEXT NULL,
+  `reg_date` DATETIME NOT NULL,
+  `img_path` VARCHAR(300) NULL,
+  `img_name` VARCHAR(200) NULL,
+  PRIMARY KEY (`no_article`),
+  UNIQUE INDEX `no_article_UNIQUE` (`no_article` ASC) VISIBLE,
+  INDEX `fk-users-articles-no_user_idx` (`fk-users-articles-no_user` ASC) VISIBLE,
+  INDEX `fk-parties-articles-no_party_idx` (`fk-parties-articles-no_party` ASC) VISIBLE,
+  CONSTRAINT `fk-users-articles-no_user`
+    FOREIGN KEY (`fk-users-articles-no_user`)
+    REFERENCES `wao_db`.`Users` (`no_user`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk-parties-articles-no_party`
+    FOREIGN KEY (`fk-parties-articles-no_party`)
+    REFERENCES `wao_db`.`Parties` (`no_party`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+SELECT * FROM `users`;
+SELECT * FROM `parties`;
+SELECT * FROM `events`;
+SELECT * FROM `users_parties`;
+SELECT * FROM `articles`;
+SELECT * FROM `users_events`;
+
+commit ;
+
+USE `wao_db` ;
+
+INSERT INTO `wao_db`.`users`
+(`user_id`, `password`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`)
+VALUES
+('ssafy1', 'ssafy1', '김영섭', '관악구', 'M', 28, '왈왈 크르릉 왈왈', 0, null, null),
+('ssafy2', 'ssafy2', '김예림', '강북구', 'W', 27, '총무 겸 큰손 겸 왕자님 겸 스프링 GOD', 0, null, null),
+('ssafy3', 'ssafy3', '이승헌', '강남구', 'M', 27, 'SSAFY 10기 가능성의 남자', 0, null, null),
+('ssafy4', 'ssafy4', '조현수', '강남구', 'M', 29, '역삼동 음식물 수거 트럭 탈취범', 0, null, null),
+('ssafy5', 'ssafy5', '김병현', '강남구', 'M', 29, '역삼동 팬티도둑', 0, null, null),
+('ssafy6', 'ssafy6', '김종인', '강남구', 'M', 29, '역삼동 발가락', 0, null, null),
+('ssafy7', 'ssafy7', '석지명', '강남구', 'M', 29, 'IM 이하 연락 금지', 0, null, null),
+('ssafy8', 'ssafy8', '유승호', '강남구', 'M', 25, '엄지', 0, null, null),
+('ssafy9', 'ssafy9', '김남준', '강남구', 'M', 28, '어?', 0, null, null),
+('ssafy10', 'ssafy10', '김태운', '동작구', 'M', 25, '동작구 거부기', 0, null, null);
+
+INSERT INTO `wao_db`.`parties` (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`)
+VALUES
+('그린빌 러너즈', 'running', '강남구', '금요일마다 크대대 회식합니다 2차 참여 필수!', '', '', 6, 4),
+('역삼동 식핑거즈', 'running', '강남구', '헤일리의 아픈 손가락들', '', '', 6, 8);
+
+
+INSERT INTO `wao_db`.`users_parties`
+(`fk-users_parties-no_party`, `fk-users_parties-no_user`, `is_accepted`, `invited_date`, `accepted_date`)
+VALUES
+(1, 4 , 1, '2023-04-26 09:00:00.007', '2019-05-26 09:00:00.007'),
+(1, 5 , 1, '2023-04-27 09:00:00.007', '2019-05-27 09:00:00.007'),
+(2, 6 , 1, '2023-04-29 09:00:00.007', '2019-05-28 09:00:00.007'),
+(1, 7 , 0, '2023-04-30 09:00:00.007', '2019-05-29 09:00:00.007'),
+(1, 10 , 1, '2023-07-26 09:00:00.007', '2019-08-20 09:00:00.007'),
+(2, 8 , 1, '2023-07-27 09:00:00.007', '2019-08-21 09:00:00.007'),
+(2, 9 , 0, '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007');
 
 commit ;
