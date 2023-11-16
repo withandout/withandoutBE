@@ -9,11 +9,11 @@ public class UserDto {
     private String nickname;
     private String region;
     private String gender;
-    private int age;
-    private int authorized;
-    private String content;
-    private String imgPath;
-    private String imgName;
+    private int age = -1;
+    private int isAuthorized = 0;
+    private String content = "";
+    private String imgPath = "";
+    private String imgName = "";
 
     public String getContent() { return content; }
 
@@ -75,12 +75,12 @@ public class UserDto {
         this.age = age;
     }
 
-    public int getAuthorized() {
-        return authorized;
+    public int getIsAuthorized() {
+      return isAuthorized;
     }
 
-    public void setAuthorized(int authorized) {
-        this.authorized = authorized;
+    public void setIsAuthorized(int isAuthorized) {
+      this.isAuthorized = isAuthorized; 
     }
 
     public String getImgPath() {
@@ -109,7 +109,7 @@ public class UserDto {
                 ", region='" + region + '\'' +
                 ", gender='" + gender + '\'' +
                 ", age=" + age +
-                ", authorized=" + authorized +
+                ", isAuthorized=" + isAuthorized +
                 ", content='" + content + '\'' +
                 ", imgPath='" + imgPath + '\'' +
                 ", imgName='" + imgName + '\'' +

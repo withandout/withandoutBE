@@ -10,36 +10,36 @@
         <result property="region" column="region"/>
         <result property="gender" column="gender"/>
         <result property="age" column="age"/>
-        <result property="authorized" column="authorized"/>
+        <result property="isAuthorized" column="is_authorized"/>
         <result property="imgPath" column="img_path"/>
         <result property="imgName" column="img_name"/>
     </resultMap>
 
     <!-- 회원가입 -->
     <insert id="signup" parameterType="UserDto">
-        INSERT INTO `wao_db`.`user`
-        (`user_id`, `password`, `nickname`, `region`, `gender`, `age`, `content`, `authorized`, `img_path`, `img_name`)
+        INSERT INTO `wao_db`.`USERS`
+        (`user_id`, `password`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`)
         VALUES
-        (#{userId}, #{password}, #{nickname}, #{region}, #{gender}, #{age}, #{content}, #{authorized}, #{imgPath}, #{imgName})
+        (#{userId}, #{password}, #{nickname}, #{region}, #{gender}, #{age}, #{content}, #{isAuthorized}, #{imgPath}, #{imgName})
     </insert>
 
     <!-- 로그인 -->
     <select id="login" parameterType="UserDto" resultMap="UserDtoMap">
-        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `authorized`, `img_path`, `img_name`
-        FROM `wao_db`.`user` u
+        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        FROM `wao_db`.`USERS` u
         WHERE u.user_id = #{userId} AND u.password = #{password}
     </select>
 
     <!-- 유저 선택 -->
     <select id="selectUser" parameterType="String" resultMap="UserDtoMap">
-        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `authorized`, `img_path`, `img_name`
-        FROM `wao_db`.`user` u
+        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        FROM `wao_db`.`USERS` u
         WHERE u.user_id = #{userId}
     </select>
 
     <!-- 유저 수정 -->
     <update id="modifyUser" parameterType="UserDto">
-        UPDATE `wao_db`.`user`
+        UPDATE `wao_db`.`USERS`
         SET
         password = #{password},
         nickname = #{nickname},
@@ -54,29 +54,36 @@
 
     <!-- 소개글 수정 -->
     <update id="modifyUserContent" parameterType="UserDto">
-        UPDATE `wao_db`.`user`
+        UPDATE `wao_db`.`USERS`
         SET content = #{content}
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 유저 프로필 이미지 수정 -->
+    <update id="modifyUserImg" parameterType="UserDto">
+        UPDATE `wao_db`.`USERS`
+        SET img_path = #{imgPath}, img_name = #{imgName}
         WHERE user_id = #{userId}
     </update>
 
     <!-- 지역 수정 -->
     <update id="modifyUserRegion" parameterType="UserDto">
-        UPDATE `wao_db`.`user`
+        UPDATE `wao_db`.`USERS`
         SET region = #{region}
         WHERE user_id = #{userId}
     </update>
 
     <!-- 인증 여부 초기화 -->
     <update id="unauthorize" parameterType="UserDto">
-        UPDATE `wao_db`.`user`
-        SET authorized = 0
+        UPDATE `wao_db`.`USERS`
+        SET is_authorized = 0
         WHERE user_id = #{userId}
     </update>
 
     <!-- 동네 인증 -->
     <update id="authorize" parameterType="UserDto">
-        UPDATE `wao_db`.`user`
-        SET authorized = 1
+        UPDATE `wao_db`.`USERS`
+        SET is_authorized = 1
         WHERE user_id = #{userId} AND region = #{region}
     </update>
 

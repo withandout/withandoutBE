@@ -10,10 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpSession;
+import java.io.File;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/user")
@@ -21,12 +25,41 @@ import java.util.List;
 @CrossOrigin("*")
 public class UserRestController {
 
+    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandoutBE";
+
     @Autowired
     UserService userService;
 
     @PostMapping("signup")
-    ResponseEntity<Void> signup(@RequestBody UserDto userDto) {
-        int res = userService.signup(userDto);
+
+    ResponseEntity<Void> signup(UserDto userDto, MultipartFile file) {
+        // multipartformdata 확인 (RequestBody 풀고) == Null 일 경우 default Path 주기.
+
+        int res = 0;
+
+        if (file == null) {
+            res = userService.signup(userDto);
+        }
+        else {
+            String projectPath = WORKPATH + "/data/image/profile/user/";
+
+            UUID uuid = UUID.randomUUID();
+
+            // 파일 이미지 지정.
+            String imgName = uuid + "_" + file.getOriginalFilename();
+
+            // 경로 지정.
+            File saveFile = new File(projectPath, imgName);
+
+            try {
+                file.transferTo(saveFile);
+                userDto.setImgName(imgName);
+                userDto.setImgPath(projectPath + imgName);
+                res = userService.signup(userDto);
+            } catch (Exception e) {
+                return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
 
         if (res > 0)
             return new ResponseEntity<Void> (HttpStatus.OK);
@@ -57,6 +90,8 @@ public class UserRestController {
 
         if (user == null) return new ResponseEntity<Void> (HttpStatus.NOT_FOUND);
 
+        user.setImgPath(user.getImgPath());
+
         return new ResponseEntity<UserDto> (user, HttpStatus.OK);
     }
 
@@ -76,6 +111,31 @@ public class UserRestController {
         if (res > 0) return new ResponseEntity<Void> (HttpStatus.OK);
 
         return new ResponseEntity<Void> (HttpStatus.NOT_FOUND);
+    }
+
+    // 파일 업로드 시 RequestBody 사용 불가.
+    @PutMapping("info/img")
+    ResponseEntity<Void> modifyUserImg(UserDto userDto, @RequestPart MultipartFile file) {
+        String projectPath = WORKPATH + "/data/image/profile/user/";
+
+        UUID uuid = UUID.randomUUID();
+
+        // 파일 이미지 지정.
+        String imgName = uuid + "_" + file.getOriginalFilename();
+
+        // 경로 지정.
+        File saveFile = new File(projectPath, imgName);
+
+        try {
+            file.transferTo(saveFile);
+            userDto.setImgName(imgName);
+            userDto.setImgPath(projectPath + imgName);
+            userService.modifyUserImg(userDto);
+        } catch (Exception e) {
+            return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return new ResponseEntity<Void> (HttpStatus.OK);
     }
 
     // 지역 변경하면 인증 정보 바뀜.
