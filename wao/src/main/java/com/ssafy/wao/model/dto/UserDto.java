@@ -75,9 +75,13 @@ public class UserDto {
         this.age = age;
     }
 
-    public int getIsAuthorized() { return isAuthorized; }
+    public int getIsAuthorized() {
+      return isAuthorized;
+    }
 
-    public void setIsAuthorized(int isAuthorized) { this.isAuthorized = isAuthorized; }
+    public void setIsAuthorized(int isAuthorized) {
+      this.isAuthorized = isAuthorized; 
+    }
 
     public String getImgPath() {
         return imgPath;

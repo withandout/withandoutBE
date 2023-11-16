@@ -69,6 +69,7 @@ CREATE TABLE IF NOT EXISTS `wao_db`.`events` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
 DROP TABLE IF EXISTS `wao_db`.`users_and_parties` ;
 
 CREATE TABLE IF NOT EXISTS `wao_db`.`users_and_parties` (
@@ -91,6 +92,10 @@ CREATE TABLE IF NOT EXISTS `wao_db`.`users_and_parties` (
     ON UPDATE NO ACTION)
 ENGINE = InnoDB;
 
+
 SELECT * FROM `wao_db`.`users`;
+
+SELECT * FROM `wao_db`.`events`;
+
 
 commit ;
