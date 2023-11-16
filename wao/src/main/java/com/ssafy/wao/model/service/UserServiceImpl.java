@@ -5,10 +5,12 @@ import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -43,6 +45,9 @@ public class UserServiceImpl implements UserService {
     public int modifyUserRegion(UserDto userDto) {
         return userDao.modifyUserRegion(userDto);
     }
+
+    @Override
+    public int modifyUserImg(UserDto userDto) { return userDao.modifyUserImg(userDto); };
 
     @Override
     public int unauthorize(UserDto userDto) {

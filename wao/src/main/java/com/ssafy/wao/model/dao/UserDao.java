@@ -44,6 +44,10 @@ public interface UserDao {
     public int modifyUserRegion(UserDto userDto);
 
     /*
+        유저 프로필 이미지 수정
+     */
+    public int modifyUserImg(UserDto userDto);
+    /*
         인증 정보 초기화
      */
     public int unauthorize(UserDto userDto);
