@@ -29,44 +29,58 @@
         <id property="eventNo" column="no_event"/>
         <result property="startTime" column="start_time"/>
         <result property="endTime" column="end_time"/>
-        <result property="partyNo" column="fk-parties-events-no_parties"/>
+        <result property="partyNo" column="fk-parties-events-no_party"/>
     </resultMap>
 
     <insert id="makeParty" parameterType="PartyDto" useGeneratedKeys="true" keyProperty="no_party">
         INSERT INTO `wao_db`.`Parties`
-        (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `leadUserNo`)
+        (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `userNo`)
         VALUES
-        (#{name}, #{sports}, #{region}, #{content}, #{imgPath}, #{imgName}, #{sizeLimit}, #{leadUserNo})
+        (#{name}, #{sports}, #{region}, #{content}, #{imgPath}, #{imgName}, #{sizeLimit}, #{userNo})
     </insert>
 
     <insert id="insertPartyMember" parameterType="PartyDto">
         <!-- isAccepted = 같이 넣어 줘야함. -->
-
-
+        INSERT INTO `wao_db`.`Users_Parties`
+        (`fk-users_parties-no_party`, `fk-users_parties-no_user`, `is_accepted`, `invited_date`, `accepted_date`)
+        VALUES
+        (#{})
     </insert>
+
     <!--  1개 파티 조회  -->
     <select id="selectParty" parameterType="int" resultType="PartyDtoMap">
-        SELECT `name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `leadUserNo`
+        SELECT `name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `userNo`
         FROM `wao_db`.`Parties` p
         WHERE p.no_party = #{partyNo}
     </select>
+
     <!--  전체 파티 조회  -->
     <select id="selectEntireParty" resultType="PartyDtoMap">
-        SELECT `name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `leadUserNo`
+        SELECT `name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `userNo`
         FROM `wao_db`.`Parties`
     </select>
 
-    <!--    -->
-    <select id="selectMembers" parameterType="int" resultType="PartyDtoMap">
-
+    <!-- 파티 멤버 전체 조회 -->
+    <select id="selectMembers" parameterType="int" resultType="UserDtoMap">
+        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        FROM
+        (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+        FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
+        ON up.`fk-users_parties-no_party` = p.`no_party`
+        WHERE p.`no_party` = #{no_party}) members LEFT JOIN `wao_db`.`Users` u
+        ON members.`no_user` = u.`no_user`;
     </select>
 
+    <!-- 파티 리더 조회 -->
     <select id="selectLeader" parameterType="int" resultType="UserDto">
-
+        SELECT u.`user_id`, u.`nickname`, u.`region`, u.`gender`, u.`age`, u.`content`, u.`is_authorized`, u.`img_path`, u.`img_name`
+        FROM `wao_db`.`parties` p LEFT JOIN `wao_db`.`USERS` u
+        ON p.`fk-users-parties-no_user` = u.`no_user`
+        WHERE p.`no_party` = #{no_party};
     </select>
 
+    <!-- 파티 이벤트 전체 조회 -->
     <select id="selectAllEvents">
 
     </select>
-
 </mapper>

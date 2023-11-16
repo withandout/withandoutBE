@@ -204,3 +204,28 @@ VALUES
 (2, 9 , 0, '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007');
 
 commit ;
+
+-- 파티 멤버 전체 조회
+SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+FROM `wao_db`.`USERS` u
+WHERE u.user_id = 1;
+
+-- 1번 파티 멤버 숫자 조회.
+SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
+ON up.`fk-users_parties-no_party` = p.`no_party`
+WHERE p.`no_party` = 1;
+
+-- 현재 유저 테이블에 위 테이블을 조인한다. 이후에 탈퇴한 멤버가 있을 수도 있으니까...
+SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+FROM 
+(SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
+ON up.`fk-users_parties-no_party` = p.`no_party`
+WHERE p.`no_party` = 1) members LEFT JOIN `wao_db`.`Users` u
+ON members.`no_user` = u.`no_user`;
+
+-- 파티 리더 정보 찾아오기.
+SELECT u.`user_id`, u.`nickname`, u.`region`, u.`gender`, u.`age`, u.`content`, u.`is_authorized`, u.`img_path`, u.`img_name`
+FROM `wao_db`.`parties` p LEFT JOIN `wao_db`.`USERS` u
+ON p.`fk-users-parties-no_user` = u.`no_user`;
