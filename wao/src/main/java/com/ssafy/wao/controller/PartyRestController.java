@@ -76,6 +76,15 @@ public class PartyRestController {
         return new ResponseEntity<List<UserDto>>(partyMembers, HttpStatus.OK);
     }
 
+    @GetMapping("applicants")
+    ResponseEntity<?> selectApplicants(int partyNo) {
+        List<UserDto> partyApplicants = partyService.selectApplicants(partyNo);
+
+        if (partyApplicants == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<List<UserDto>>(partyApplicants, HttpStatus.OK);
+    }
+
     @GetMapping("members/leader")
     ResponseEntity<?> selectLeader(int partyNo) {
         UserDto leader = partyService.selectLeader(partyNo);

@@ -38,6 +38,8 @@ public class PartyServiceImpl implements PartyService {
         return partyDao.selectMembers(partyNo);
     }
 
+    public List<UserDto> selectApplicants(int partyNo) {return partyDao.selectApplicants(partyNo);}
+
     @Override
     public UserDto selectLeader(int partyNo) {
         return partyDao.selectLeader(partyNo);

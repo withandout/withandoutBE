@@ -34,6 +34,12 @@ public interface PartyService {
 
     /*
         일치하는 파티넘버를 찾아 모든 파티 구성원을 조회하는 기능힙니다.
+        partyNo 받아서 List<UserDto> 반환
+     */
+    public List<UserDto> selectApplicants(int partyNo);
+
+    /*
+        일치하는 파티넘버를 찾아 모든 파티 구성원을 조회하는 기능힙니다.
         partyNo를 받아서 UserDto 반환
      */
     public UserDto selectLeader(int partyNo);

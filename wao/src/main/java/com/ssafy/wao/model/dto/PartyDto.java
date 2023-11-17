@@ -81,16 +81,12 @@ public class PartyDto {
         this.sizeLimit = sizeLimit;
     }
 
-    public int getuserNo() {
+    public int getUserNo() {
         return userNo;
     }
 
     public void setUserNo(int userNo) {
         this.userNo = userNo;
-    }
-
-    public int getUserNo() {
-        return userNo;
     }
 
     public int getIsAccepted() {
@@ -123,11 +119,15 @@ public class PartyDto {
                 "partyNo=" + partyNo +
                 ", name='" + name + '\'' +
                 ", sports='" + sports + '\'' +
+                ", region='" + region + '\'' +
                 ", content='" + content + '\'' +
                 ", imgPath='" + imgPath + '\'' +
                 ", imgName='" + imgName + '\'' +
-                ", sizeLimit='" + sizeLimit + '\'' +
+                ", sizeLimit=" + sizeLimit +
                 ", userNo=" + userNo +
+                ", isAccepted=" + isAccepted +
+                ", invitedDate=" + invitedDate +
+                ", acceptedDate=" + acceptedDate +
                 '}';
     }
 }
