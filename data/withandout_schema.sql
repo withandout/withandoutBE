@@ -205,3 +205,18 @@ VALUES
 (2, 9 , 0, '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007');
 
 commit ;
+
+SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        FROM
+        (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+        FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
+        ON up.`fk-users_parties-no_party` = p.`no_party`
+        WHERE p.`no_party` = 1) members LEFT JOIN `wao_db`.`Users` u
+        ON members.`no_user` = u.`no_user`
+        WHERE `is_authorized` = 1;
+        
+        
+SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`, `is_accepted`
+        FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
+        ON up.`fk-users_parties-no_party` = p.`no_party`
+        WHERE p.`no_party` = 1;

@@ -27,10 +27,16 @@ public interface PartyDao {
     public List<PartyDto> selectEntireParty();
 
     /*
-        일치하는 파티넘버를 찾아 모든 파티 구성원을 조회하는 기능힙니다.
+        일치하는 파티넘버를 찾아 파티 내 모든 구성원을 조회하는 기능힙니다.
         partyNo 받아서 List<UserDto> 반환
      */
     public List<UserDto> selectMembers(int partyNo);
+
+    /*
+        일치하는 파티넘버를 찾아 파티 내 모든 신청자를 조회하는 기능힙니다.
+        partyNo 받아서 List<UserDto> 반환
+     */
+    public List<UserDto> selectApplicants(int partyNo);
 
     /*
         일치하는 파티넘버를 찾아 모든 파티 구성원을 조회하는 기능힙니다.
@@ -49,6 +55,22 @@ public interface PartyDao {
         partyNo를 받아서 size 값 반환
      */
     public int getPartySize(int partyNo);
+
+    /*
+        파티 멤버 신청 승인 기능입니다.
+        update
+        param : PartyDto partyDto
+        result : int (승인 여부)
+     */
+    public int acceptApply(PartyDto partyDto);
+
+    /*
+        파티 멤버 신청 거절 기능입니다.
+        delete
+        param : PartyDto partyDto
+        result : int (승인 여부)
+     */
+    public int declineApply(int partyNo);
 
     public int insertPartyMember(PartyDto partyDto);
 }
