@@ -1,13 +1,21 @@
 package com.ssafy.wao.model.dto;
 
+import java.sql.Date;
+import java.sql.Timestamp;
+
 public class PartyDto {
     private int partyNo;
     private String name;
     private String sports;
+    private String region;
     private String content;
     private String imgPath;
     private String imgName;
-    private int leadUserNo;
+    private int sizeLimit;
+    private int userNo;
+    private int isAccepted;
+    private Date invitedDate;
+    private Date acceptedDate;
 
     public int getPartyNo() {
         return partyNo;
@@ -31,6 +39,14 @@ public class PartyDto {
 
     public void setSports(String sports) {
         this.sports = sports;
+    }
+
+    public String getRegion() {
+        return region;
+    }
+
+    public void setRegion(String region) {
+        this.region = region;
     }
 
     public String getContent() {
@@ -57,12 +73,48 @@ public class PartyDto {
         this.imgName = imgName;
     }
 
-    public int getLeadUserNo() {
-        return leadUserNo;
+    public int getSizeLimit() {
+        return sizeLimit;
     }
 
-    public void setLeadUserNo(int leadUserNo) {
-        this.leadUserNo = leadUserNo;
+    public void setSizeLimit(int sizeLimit) {
+        this.sizeLimit = sizeLimit;
+    }
+
+    public int getuserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(int userNo) {
+        this.userNo = userNo;
+    }
+
+    public int getUserNo() {
+        return userNo;
+    }
+
+    public int getIsAccepted() {
+        return isAccepted;
+    }
+
+    public void setIsAccepted(int isAccepted) {
+        this.isAccepted = isAccepted;
+    }
+
+    public Date getInvitedDate() {
+        return invitedDate;
+    }
+
+    public void setInvitedDate(Date invitedDate) {
+        this.invitedDate = invitedDate;
+    }
+
+    public Date getAcceptedDate() {
+        return acceptedDate;
+    }
+
+    public void setAcceptedDate(Date acceptedDate) {
+        this.acceptedDate = acceptedDate;
     }
 
     @Override
@@ -74,7 +126,8 @@ public class PartyDto {
                 ", content='" + content + '\'' +
                 ", imgPath='" + imgPath + '\'' +
                 ", imgName='" + imgName + '\'' +
-                ", leadUserNo=" + leadUserNo +
+                ", sizeLimit='" + sizeLimit + '\'' +
+                ", userNo=" + userNo +
                 '}';
     }
 }
