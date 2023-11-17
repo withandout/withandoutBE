@@ -169,6 +169,7 @@ SELECT * FROM `users_parties`;
 SELECT * FROM `articles`;
 SELECT * FROM `users_events`;
 
+
 commit ;
 
 USE `wao_db` ;
@@ -190,13 +191,13 @@ VALUES
 INSERT INTO `wao_db`.`parties` (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`)
 VALUES
 ('그린빌 러너즈', 'running', '강남구', '금요일마다 크대대 회식합니다 2차 참여 필수!', '', '', 6, 4),
-('역삼동 식핑거즈', 'running', '강남구', '헤일리의 아픈 손가락들', '', '', 6, 8);
-
+('역삼동 식핑거즈', 'running', '강남구', '헤일리의 아픈 손가락들', '', '', 4, 8);
 
 INSERT INTO `wao_db`.`users_parties`
 (`fk-users_parties-no_party`, `fk-users_parties-no_user`, `is_accepted`, `invited_date`, `accepted_date`)
 VALUES
 (1, 4 , 1, '2023-04-26 09:00:00.007', '2019-05-26 09:00:00.007'),
+(2, 4 , 1, '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
 (1, 5 , 1, '2023-04-27 09:00:00.007', '2019-05-27 09:00:00.007'),
 (2, 6 , 1, '2023-04-29 09:00:00.007', '2019-05-28 09:00:00.007'),
 (1, 7 , 0, '2023-04-30 09:00:00.007', '2019-05-29 09:00:00.007'),
@@ -220,3 +221,62 @@ SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `
         FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
         ON up.`fk-users_parties-no_party` = p.`no_party`
         WHERE p.`no_party` = 1;
+        
+-- UPDATE `wao_db`.`USERS_Parties`
+-- SET `is_accepted` = 1
+-- WHERE `fk-users_parties-no_user` = 7 AND `fk-users_parties-no_party` = 1;
+
+-- 승인
+-- UPDATE `wao_db`.`USERS_Parties`
+-- SET `is_accepted` = 1
+-- WHERE `fk-users_parties-no_user` = 7 AND `fk-users_parties-no_party` = 1;
+
+-- 거절
+-- DELETE FROM `wao_db`.`USERS_Parties`
+-- WHERE `fk-users_parties-no_user` = 7 AND `fk-users_parties-no_party` = 1;
+
+SELECT `no_party` `name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`
+        FROM `wao_db`.`Parties`;
+        
+SELECT *
+FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`USERS` u
+ON up.`fk-users_parties-no_user` = u.`no_user`;
+
+-- 원하는 사람의 파티 가입 정보 들어온다. 
+SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+FROM `wao_db`.`Users_Parties` 
+WHERE `fk-users_parties-no_user` = 4 AND is_accepted = 1;
+
+
+-- 파티 정보 조인
+SELECT * FROM
+(
+SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+FROM `wao_db`.`Users_Parties` up LEFT JOIN `wao_db`.`Users` u
+ON up.`fk-users_parties-no_user` = u.`no_user`
+WHERE u.`nickname` = '석지명' AND is_accepted = 1) myparty LEFT JOIN `wao_db`.`Parties` p
+ON myparty.`no_party` = p.`no_party`;
+
+-- 닉네임으로 가입중인 파티 찾기.
+SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+FROM `wao_db`.`Users_Parties` up LEFT JOIN `wao_db`.`Users` u
+ON up.`fk-users_parties-no_user` = u.`no_user`
+WHERE u.`nickname` = '조현수' AND is_accepted = 1 ;
+
+-- 닉네임으로 신청했으나 가입안된 파티 찾기.
+SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+FROM `wao_db`.`Users_Parties` up LEFT JOIN `wao_db`.`Users` u
+ON up.`fk-users_parties-no_user` = u.`no_user`
+WHERE u.`nickname` = '조현수' AND is_accepted = 1 ;
+
+
+SELECT `fk-users_parties-no_party` as no_party, count(*) as cnt
+FROM `users_parties`
+GROUP BY `fk-users_parties-no_party`;
+
+SELECT * FROM 
+(SELECT `fk-users_parties-no_party` as no_party, count(*) as cnt
+FROM `users_parties`
+GROUP BY `fk-users_parties-no_party`) cnts LEFT JOIN `wao_db`.`parties` p
+ON cnts.`no_party` = p.`no_party`
+WHERE cnts.`cnt` < p.`size_limit`;

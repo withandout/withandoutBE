@@ -23,7 +23,7 @@
         <result property="imgPath" column="img_path"/>
         <result property="imgName" column="img_name"/>
         <result property="sizeLimit" column="size_limit"/>
-        <result property="leadUserNo" column="fk-users-parties-no_user"/>
+        <result property="userNo" column="fk-users-parties-no_user"/>
     </resultMap>
 
     <!-- 회원가입 -->
@@ -100,14 +100,21 @@
     </update>
 
     <!-- 유저가 속한 파티 찾아오기 3개 조인해야 할 듯.-->
-    <select id="selectUserParties" parameterType="UserDto">
-        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
-        FROM
+    <select id="selectUserParties" parameterType="String" resultMap="PartyDtoMap">
+        SELECT * FROM
         (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
-        FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
-        ON up.`fk-users_parties-no_party` = p.`no_party`
-        WHERE p.`no_party` = #{no_party}) members LEFT JOIN `wao_db`.`Users` u
-        ON members.`no_user` = u.`no_user`;
+        FROM `wao_db`.`Users_Parties` up LEFT JOIN `wao_db`.`Users` u
+        ON up.`fk-users_parties-no_user` = u.`no_user`
+        WHERE u.`nickname` = #{nickname} AND is_accepted = 1) myparty LEFT JOIN `wao_db`.`Parties` p
+        ON myparty.`no_party` = p.`no_party`;
+    </select>
 
+    <select id="selectUserApplies" parameterType="String" resultMap="PartyDtoMap">
+        SELECT * FROM
+        (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+        FROM `wao_db`.`Users_Parties` up LEFT JOIN `wao_db`.`Users` u
+        ON up.`fk-users_parties-no_user` = u.`no_user`
+        WHERE u.`nickname` = #{nickname} AND is_accepted = 0) myparty LEFT JOIN `wao_db`.`Parties` p
+        ON myparty.`no_party` = p.`no_party`;
     </select>
 </mapper>

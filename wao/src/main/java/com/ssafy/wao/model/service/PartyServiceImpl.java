@@ -34,6 +34,11 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
+    public List<PartyDto> selectAvailableParty() {
+        return partyDao.selectAvailableParty();
+    }
+
+    @Override
     public List<UserDto> selectMembers(int partyNo) {
         return partyDao.selectMembers(partyNo);
     }
@@ -53,6 +58,16 @@ public class PartyServiceImpl implements PartyService {
     @Override
     public int getPartySize(int partyNo) {
         return partyDao.getPartySize(partyNo);
+    }
+
+    @Override
+    public int acceptApply(PartyDto partyDto) {
+        return partyDao.acceptApply(partyDto);
+    }
+
+    @Override
+    public int declineApply(PartyDto partyDto) {
+        return partyDao.declineApply(partyDto);
     }
 
     @Override

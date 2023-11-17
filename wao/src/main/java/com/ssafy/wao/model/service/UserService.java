@@ -63,5 +63,5 @@ public interface UserService {
         유저의 소속 파티 정보 확인
         int userNo
      */
-    public List<PartyDto> selectUserParties(UserDto userDto);
+    public List<PartyDto> selectUserParties(String nickname);
 }
