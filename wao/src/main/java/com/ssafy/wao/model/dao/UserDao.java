@@ -21,9 +21,10 @@ public interface UserDao {
 
     /*
         단일 유저 정보를 조회합니다.
-        int userNo 이용.
+        String nickname 이용.
+        get 요청으로 들어오는 만큼, 유저의 식별자를 굳이 URL 상에서 표시하기는 좀...
      */
-    public UserDto selectUser(String userId);
+    public UserDto selectUser(String nickname);
 
     /*
         단일 유저 정보를 수정합니다.

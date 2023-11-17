@@ -5,7 +5,8 @@
 
 <mapper namespace="com.ssafy.wao.model.dao.UserDao">
     <resultMap id="UserDtoMap" type="UserDto">
-        <id property="userId" column="user_id" />
+        <id property="userNo" column="no_user" />
+        <result property="userId" column="user_id"/>
         <result property="nickname" column="nickname"/>
         <result property="region" column="region"/>
         <result property="gender" column="gender"/>
@@ -13,6 +14,16 @@
         <result property="isAuthorized" column="is_authorized"/>
         <result property="imgPath" column="img_path"/>
         <result property="imgName" column="img_name"/>
+    </resultMap>
+    <resultMap id="PartyDtoMap" type="PartyDto">
+        <id property="partyNo" column="no_party" />
+        <result property="name" column="name"/>
+        <result property="sports" column="sports"/>
+        <result property="content" column="content"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="imgName" column="img_name"/>
+        <result property="sizeLimit" column="size_limit"/>
+        <result property="leadUserNo" column="fk-users-parties-no_user"/>
     </resultMap>
 
     <!-- 회원가입 -->
@@ -25,22 +36,23 @@
 
     <!-- 로그인 -->
     <select id="login" parameterType="UserDto" resultMap="UserDtoMap">
-        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        SELECT `no_user`, `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
         FROM `wao_db`.`USERS` u
         WHERE u.user_id = #{userId} AND u.password = #{password}
     </select>
 
     <!-- 유저 선택 -->
     <select id="selectUser" parameterType="String" resultMap="UserDtoMap">
-        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        SELECT `no_user`, `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
         FROM `wao_db`.`USERS` u
-        WHERE u.user_id = #{userId}
+        WHERE u.nickname = #{nickname}
     </select>
 
     <!-- 유저 수정 -->
     <update id="modifyUser" parameterType="UserDto">
         UPDATE `wao_db`.`USERS`
         SET
+        user_id = #{userId},
         password = #{password},
         nickname = #{nickname},
         region = #{region},
@@ -49,47 +61,53 @@
         content = #{content},
         `img_path` = #{imgPath},
         `img_name` = #{imgName}
-        WHERE user_id = #{userId}
+        WHERE no_user = #{userNo}
     </update>
 
     <!-- 소개글 수정 -->
     <update id="modifyUserContent" parameterType="UserDto">
         UPDATE `wao_db`.`USERS`
         SET content = #{content}
-        WHERE user_id = #{userId}
+        WHERE no_user = #{userNo}
     </update>
 
     <!-- 유저 프로필 이미지 수정 -->
     <update id="modifyUserImg" parameterType="UserDto">
         UPDATE `wao_db`.`USERS`
         SET img_path = #{imgPath}, img_name = #{imgName}
-        WHERE user_id = #{userId}
+        WHERE no_user = #{userNo}
     </update>
 
     <!-- 지역 수정 -->
     <update id="modifyUserRegion" parameterType="UserDto">
         UPDATE `wao_db`.`USERS`
         SET region = #{region}
-        WHERE user_id = #{userId}
+        WHERE no_user = #{userNo}
     </update>
 
     <!-- 인증 여부 초기화 -->
     <update id="unauthorize" parameterType="UserDto">
         UPDATE `wao_db`.`USERS`
         SET is_authorized = 0
-        WHERE user_id = #{userId}
+        WHERE no_user = #{userNo}
     </update>
 
     <!-- 동네 인증 -->
     <update id="authorize" parameterType="UserDto">
         UPDATE `wao_db`.`USERS`
         SET is_authorized = 1
-        WHERE user_id = #{userId} AND region = #{region}
+        WHERE no_user = #{userNo} AND region = #{region}
     </update>
 
     <!-- 유저가 속한 파티 찾아오기 3개 조인해야 할 듯.-->
     <select id="selectUserParties" parameterType="UserDto">
-
+        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        FROM
+        (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
+        FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
+        ON up.`fk-users_parties-no_party` = p.`no_party`
+        WHERE p.`no_party` = #{no_party}) members LEFT JOIN `wao_db`.`Users` u
+        ON members.`no_user` = u.`no_user`;
 
     </select>
 </mapper>

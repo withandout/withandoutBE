@@ -23,7 +23,7 @@ public interface UserService {
         단일 유저 정보를 조회합니다.
         int userNo 이용.
      */
-    public UserDto selectUser(String userId);
+    public UserDto selectUser(String nickname);
 
     /*
         단일 유저 정보를 수정합니다.

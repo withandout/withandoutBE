@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto selectUser(String userId) {
-        return userDao.selectUser(userId);
+    public UserDto selectUser(String nickname) {
+        return userDao.selectUser(nickname);
     }
 
     @Override

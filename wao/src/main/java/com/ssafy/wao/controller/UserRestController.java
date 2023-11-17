@@ -31,7 +31,6 @@ public class UserRestController {
     UserService userService;
 
     @PostMapping("signup")
-
     ResponseEntity<Void> signup(UserDto userDto, @RequestPart(required = false) MultipartFile file) {
         // multipartformdata 확인 (RequestBody 풀고) == Null 일 경우 default Path 주기.
 
@@ -84,9 +83,9 @@ public class UserRestController {
         return new ResponseEntity<Void> (HttpStatus.OK);
     }
 
-    @GetMapping("info/{userId}")
-    ResponseEntity<?> selectUser(@PathVariable String userId) {
-        UserDto user = userService.selectUser(userId);
+    @GetMapping("info/{nickname}")
+    ResponseEntity<?> selectUser(@PathVariable String nickname) {
+        UserDto user = userService.selectUser(nickname);
 
         if (user == null) return new ResponseEntity<Void> (HttpStatus.NOT_FOUND);
 

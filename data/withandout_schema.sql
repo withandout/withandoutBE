@@ -93,6 +93,7 @@ CREATE TABLE IF NOT EXISTS `wao_db`.`Users_Parties` (
   `fk-users_parties-no_party` INT NOT NULL,
   `fk-users_parties-no_user` INT NOT NULL,
   `is_accepted` TINYINT NOT NULL DEFAULT 0,
+  `content` TINYTEXT NULL,
   `invited_date` DATETIME NOT NULL,
   `accepted_date` DATETIME NULL,
   PRIMARY KEY (`fk-users_parties-no_party`, `fk-users_parties-no_user`),
