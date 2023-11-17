@@ -160,9 +160,10 @@ public class UserRestController {
     }
 
     // party Controller 이동 여부 확인
-    @GetMapping("myparty")
-    ResponseEntity<List<PartyDto>> selectUserParties(@RequestBody UserDto userDto) {
-        List<PartyDto> myParty = userService.selectUserParties(userDto);
+    @GetMapping("myparty/{nickname}")
+    ResponseEntity<List<PartyDto>> selectUserParties(String nickname) {
+
+        List<PartyDto> myParty = userService.selectUserParties(nickname);
 
         return new ResponseEntity<List<PartyDto>> (myParty, HttpStatus.OK);
     }

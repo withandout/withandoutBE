@@ -24,13 +24,16 @@ public class PartyRestController {
     PartyService partyService;
 
     @PostMapping("new")
-    ResponseEntity<Void> makeParty(@RequestBody PartyDto partyDto) {
+    ResponseEntity<Void> makeParty(PartyDto partyDto) {
+
+        System.out.println(partyDto);
         int generatedPartyId = 0;
         if (partyDto != null) {
-            generatedPartyId = partyService.makeParty(partyDto);
+            partyService.makeParty(partyDto);
+            generatedPartyId = partyDto.getPartyNo();
+
             if (generatedPartyId > 0) {
                 // users-parties 테이블 가서 generatedId , userId 전달
-                // insert -> res
 
                 PartyDto insertMember = new PartyDto();
 
@@ -58,7 +61,7 @@ public class PartyRestController {
         return new ResponseEntity<PartyDto>(party, HttpStatus.OK);
     }
 
-    @GetMapping("info")
+    @GetMapping("info/all")
     ResponseEntity<?> selectEntireParty() {
         List<PartyDto> partyList = partyService.selectEntireParty();
 
@@ -67,8 +70,17 @@ public class PartyRestController {
         return new ResponseEntity<List<PartyDto>>(partyList, HttpStatus.OK);
     }
 
-    @GetMapping("members")
-    ResponseEntity<?> selectMembers(int partyNo) {
+    @GetMapping("info/available")
+    ResponseEntity<?> selectAvailableParty() {
+        List<PartyDto> partyList = partyService.selectAvailableParty();
+
+        if (partyList == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<List<PartyDto>>(partyList, HttpStatus.OK);
+    }
+
+    @GetMapping("members/{partyNo}")
+    ResponseEntity<?> selectMembers(@PathVariable int partyNo) {
         List<UserDto> partyMembers = partyService.selectMembers(partyNo);
 
         if (partyMembers == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
@@ -76,8 +88,8 @@ public class PartyRestController {
         return new ResponseEntity<List<UserDto>>(partyMembers, HttpStatus.OK);
     }
 
-    @GetMapping("applicants")
-    ResponseEntity<?> selectApplicants(int partyNo) {
+    @GetMapping("apply/{partyNo}")
+    ResponseEntity<?> selectApplicants(@PathVariable int partyNo) {
         List<UserDto> partyApplicants = partyService.selectApplicants(partyNo);
 
         if (partyApplicants == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
@@ -85,8 +97,8 @@ public class PartyRestController {
         return new ResponseEntity<List<UserDto>>(partyApplicants, HttpStatus.OK);
     }
 
-    @GetMapping("members/leader")
-    ResponseEntity<?> selectLeader(int partyNo) {
+    @GetMapping("members/leader/{partyNo}")
+    ResponseEntity<?> selectLeader(@PathVariable int partyNo) {
         UserDto leader = partyService.selectLeader(partyNo);
 
         if (leader == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
@@ -94,12 +106,41 @@ public class PartyRestController {
         return new ResponseEntity<UserDto>(leader, HttpStatus.OK);
     }
 
-    @GetMapping("events")
-    ResponseEntity<?> selectAllEvents(int partyNo) {
+    @GetMapping("events/{partyNo}")
+    ResponseEntity<?> selectAllEvents(@PathVariable int partyNo) {
         List<EventDto> partyEvents = partyService.selectAllEvents(partyNo);
 
         if (partyEvents == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<List<EventDto>>(partyEvents, HttpStatus.OK);
+    }
+
+    @PostMapping("apply")
+    ResponseEntity<Void> applyToParty(@RequestBody PartyDto partyDto) {
+        partyDto.setIsAccepted(0);
+        int res = partyService.insertPartyMember(partyDto);
+
+        if (res > 0) return new ResponseEntity<Void>(HttpStatus.OK);
+
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @PutMapping("apply")
+    ResponseEntity<Void> acceptApply(@RequestBody PartyDto partyDto) {
+        partyDto.setIsAccepted(1);
+        int res = partyService.acceptApply(partyDto);
+
+        if (res > 0) return new ResponseEntity<Void>(HttpStatus.OK);
+
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @DeleteMapping("applicants")
+    ResponseEntity<?> declineApplication(@RequestBody PartyDto partyDto) {
+        int res = partyService.declineApply(partyDto);
+
+        if (res > 0) return new ResponseEntity<Void>(HttpStatus.OK);
+
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 }

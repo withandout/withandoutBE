@@ -32,7 +32,7 @@
         <result property="partyNo" column="fk-parties-events-no_parties"/>
     </resultMap>
 
-    <insert id="makeParty" parameterType="PartyDto" useGeneratedKeys="true" keyProperty="no_party">
+    <insert id="makeParty" parameterType="PartyDto" useGeneratedKeys="true" keyColumn="no_party" keyProperty="partyNo">
         INSERT INTO `wao_db`.`Parties`
         (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`)
         VALUES
@@ -44,7 +44,7 @@
         INSERT INTO `wao_db`.`Users_Parties`
         (`fk-users_parties-no_party`, `fk-users_parties-no_user`, `is_accepted`, `invited_date`, `accepted_date`)
         VALUES
-        (`partyNo`, `userNo`, `isAccepted`, `invitedDate`, `acceptedDate`)
+        (#{partyNo}, #{userNo}, #{isAccepted}, #{invitedDate}, #{acceptedDate})
     </insert>
 
     <!--  1개 파티 조회  -->
@@ -53,41 +53,65 @@
         FROM `wao_db`.`Parties` p
         WHERE p.no_party = #{partyNo}
     </select>
+
     <!--  전체 파티 조회  -->
     <select id="selectEntireParty" resultMap="PartyDtoMap">
         SELECT `no_party` `name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`
         FROM `wao_db`.`Parties`
     </select>
 
+    <!--  여석이 있는 파티 조회  -->
+    <select id="selectAvailableParty" resultMap="PartyDtoMap">
+        SELECT * FROM
+        (SELECT `fk-users_parties-no_party` as no_party, count(*) as cnt
+        FROM `users_parties`
+        GROUP BY `fk-users_parties-no_party`) cnts LEFT JOIN `wao_db`.`parties` p
+        ON cnts.`no_party` = p.`no_party`
+        WHERE cnts.`cnt` &lt; p.`size_limit`;
+    </select>
+
     <!-- 파티 멤버 전체 조회 -->
     <select id="selectMembers" parameterType="int" resultMap="UserDtoMap">
-        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        SELECT u.`no_user`, `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
         FROM
         (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`, `is_accepted`
         FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
         ON up.`fk-users_parties-no_party` = p.`no_party`
-        WHERE p.`no_party` = #{no_party} AND `is_accepted` = 1) members LEFT JOIN `wao_db`.`Users` u
+        WHERE p.`no_party` = #{partyNo} AND `is_accepted` = 1) members LEFT JOIN `wao_db`.`Users` u
         ON members.`no_user` = u.`no_user`
     </select>
 
     <!-- 파티 멤버 신청자 전체 조회 -->
     <select id="selectApplicants" parameterType="int" resultMap="UserDtoMap">
-        SELECT `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        SELECT u.`no_user`, `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
         FROM
         (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
         FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
         ON up.`fk-users_parties-no_party` = p.`no_party`
-        WHERE p.`no_party` = #{no_party} AND `is_accepted` = 0) members LEFT JOIN `wao_db`.`Users` u
+        WHERE p.`no_party` = #{partyNo} AND `is_accepted` = 0) members LEFT JOIN `wao_db`.`Users` u
         ON members.`no_user` = u.`no_user`
     </select>
 
     <!-- 파티 리더 조회 -->
     <select id="selectLeader" parameterType="int" resultType="UserDto">
-        SELECT u.`user_id`, u.`nickname`, u.`region`, u.`gender`, u.`age`, u.`content`, u.`is_authorized`, u.`img_path`, u.`img_name`
+        SELECT u.`no_user`, u.`user_id`, u.`nickname`, u.`region`, u.`gender`, u.`age`, u.`content`, u.`is_authorized`, u.`img_path`, u.`img_name`
         FROM `wao_db`.`parties` p LEFT JOIN `wao_db`.`USERS` u
         ON p.`fk-users-parties-no_user` = u.`no_user`
-        WHERE p.`no_party` = #{no_party};
+        WHERE p.`no_party` = #{partyNo};
     </select>
+
+    <!-- 파티 참여 요청 승인 -->
+    <update id="acceptApply" parameterType="PartyDto">
+        UPDATE `wao_db`.`USERS_Parties`
+        SET `is_accepted` = 1
+        WHERE `fk-users_parties-no_user` = #{userNo} AND `fk-users_parties-no_party` = #{partyNo};
+    </update>
+
+    <!-- 파티 참여 요청 거절 -->
+    <delete id="declineApply" parameterType="PartyDto">
+        DELETE FROM `wao_db`.`USERS_Parties`
+        WHERE `fk-users_parties-no_user` = #{userNo} AND `fk-users_parties-no_party` = #{partyNo};
+    </delete>
 
     <!-- 파티 이벤트 전체 조회 -->
     <select id="selectAllEvents">

@@ -27,6 +27,11 @@ public interface PartyService {
     public List<PartyDto> selectEntireParty();
 
     /*
+        현재 참여 가능한(여석이 존재하는) 파티 조회.
+     */
+    public List<PartyDto> selectAvailableParty();
+
+    /*
         일치하는 파티넘버를 찾아 모든 파티 구성원을 조회하는 기능힙니다.
         partyNo 받아서 List<UserDto> 반환
      */
@@ -55,6 +60,29 @@ public interface PartyService {
         partyNo를 받아서 size 값 반환
     */
     public int getPartySize(int partyNo);
+
+    /*
+        파티 멤버 신청 승인 기능입니다.
+        update
+        params : PartyDto partyDto
+        result : int (승인 여부)
+     */
+    public int acceptApply(PartyDto partyDto);
+
+    /*
+        파티 멤버 신청 거절 기능입니다.
+        delete
+        params : PartyDto partyDto
+        result : int (승인 여부)
+     */
+    public int declineApply(PartyDto partyDto);
+
+    /*
+        파티 신청 기능입니다.
+        post
+        params : PartyDto partyDto
+        result : int (성공 여부)
+     */
 
     public int insertPartyMember(PartyDto partyDto);
 }
