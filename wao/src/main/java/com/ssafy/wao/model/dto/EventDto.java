@@ -8,6 +8,9 @@ public class EventDto {
     private Date sttTime;
     private Date endTime;
     private int partyNo;
+    private int userNo;
+    private String content;
+    private int is_applied;
 
     public int getEventNo() {
         return eventNo;
@@ -41,6 +44,30 @@ public class EventDto {
         this.partyNo = partyNo;
     }
 
+    public int getUserNo() {
+        return userNo;
+    }
+
+    public void setUserNo(int userNo) {
+        this.userNo = userNo;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public int getIs_applied() {
+        return is_applied;
+    }
+
+    public void setIs_applied(int is_applied) {
+        this.is_applied = is_applied;
+    }
+
     @Override
     public String toString() {
         return "EventDto{" +
@@ -48,6 +75,9 @@ public class EventDto {
                 ", sttTime=" + sttTime +
                 ", endTime=" + endTime +
                 ", partyNo=" + partyNo +
+                ", userNo=" + userNo +
+                ", content='" + content + '\'' +
+                ", is_applied=" + is_applied +
                 '}';
     }
 }

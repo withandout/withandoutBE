@@ -118,4 +118,10 @@
 
     </select>
 
+    <update id="modifyUserImg" parameterType="PartyDto">
+        UPDATE `wao_db`.`parties`
+        SET img_path = #{imgPath}, img_name = #{imgName}
+        WHERE `no_party` = #{partyNo}
+    </update>
+
 </mapper>

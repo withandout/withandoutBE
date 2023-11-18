@@ -72,6 +72,7 @@ CREATE TABLE IF NOT EXISTS `wao_db`.`Events` (
   `no_event` INT NOT NULL AUTO_INCREMENT,
   `start_time` DATETIME NOT NULL,
   `end_time` DATETIME NOT NULL,
+  `content` TINYTEXT NULL,
   `fk-parties-events-no_party` INT NOT NULL,
   PRIMARY KEY (`no_event`),
   UNIQUE INDEX `no_schedule_UNIQUE` (`no_event` ASC) VISIBLE,
@@ -169,7 +170,6 @@ SELECT * FROM `users_parties`;
 SELECT * FROM `articles`;
 SELECT * FROM `users_events`;
 
-
 commit ;
 
 USE `wao_db` ;
@@ -191,7 +191,8 @@ VALUES
 INSERT INTO `wao_db`.`parties` (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`)
 VALUES
 ('그린빌 러너즈', 'running', '강남구', '금요일마다 크대대 회식합니다 2차 참여 필수!', '', '', 6, 4),
-('역삼동 식핑거즈', 'running', '강남구', '헤일리의 아픈 손가락들', '', '', 4, 8);
+('역삼동 식핑거즈', 'running', '강남구', '헤일리의 아픈 손가락들', '', '', 6, 8);
+
 
 INSERT INTO `wao_db`.`users_parties`
 (`fk-users_parties-no_party`, `fk-users_parties-no_user`, `is_accepted`, `invited_date`, `accepted_date`)
@@ -204,6 +205,27 @@ VALUES
 (1, 10 , 1, '2023-07-26 09:00:00.007', '2019-08-20 09:00:00.007'),
 (2, 8 , 1, '2023-07-27 09:00:00.007', '2019-08-21 09:00:00.007'),
 (2, 9 , 0, '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007');
+
+INSERT INTO `wao_db`.`Events` (`start_time`, `end_time`, `content`, `fk-parties-events-no_party`)
+VALUES
+('2022-11-29 09:00:00.007', '2023-12-31 09:00:00.007', '스케쥴1', 1),
+('2022-01-02 09:00:00.007', '2023-12-31 09:00:00.007', '스케쥴2', 1),
+('2022-12-31 09:00:00.007', '2023-01-05 09:00:00.007', '스케쥴3', 1),
+('2022-01-02 09:00:00.007', '2023-01-05 09:00:00.007', '스케쥴4', 1),
+('2022-11-30 09:00:00.007', '2022-12-21 09:00:00.007', '스케쥴5', 1),
+('2023-12-31 09:00:00.007', '2024-12-31 09:00:00.007', '스케쥴6', 1);
+
+
+
+INSERT INTO `Users_Events` (`fk-users_events-no_user`, `fk-users_events-no_event`)
+VALUES
+(1, 1),
+(1, 2),
+(1, 3),
+(1, 4),
+(1, 5),
+(1, 6);
+
 
 commit ;
 
@@ -222,9 +244,9 @@ SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `
         ON up.`fk-users_parties-no_party` = p.`no_party`
         WHERE p.`no_party` = 1;
         
--- UPDATE `wao_db`.`USERS_Parties`
--- SET `is_accepted` = 1
--- WHERE `fk-users_parties-no_user` = 7 AND `fk-users_parties-no_party` = 1;
+UPDATE `wao_db`.`USERS_Parties`
+SET `is_accepted` = 1
+WHERE `fk-users_parties-no_user` = 7 AND `fk-users_parties-no_party` = 1;
 
 -- 승인
 -- UPDATE `wao_db`.`USERS_Parties`
@@ -242,41 +264,61 @@ SELECT *
 FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`USERS` u
 ON up.`fk-users_parties-no_user` = u.`no_user`;
 
--- 원하는 사람의 파티 가입 정보 들어온다. 
-SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
-FROM `wao_db`.`Users_Parties` 
-WHERE `fk-users_parties-no_user` = 4 AND is_accepted = 1;
 
 
--- 파티 정보 조인
+SELECT p.`no_party`, p.`name`, p.`sports`, p.`region`, p.`content`, p.`img_path`, p.`img_name`, p.`size_limit`, p.`fk-users-parties-no_user`
+FROM 
+(SELECT *
+FROM `wao_db`.`Users_Parties`
+WHERE `fk-users_parties-no_user` = 4 AND is_accepted = 1) up LEFT JOIN `wao_db`.`Parties` p
+ON up.`fk-users_parties-no_party` = p.`no_party`;
+
+-- SELECT *
+-- FROM (
+-- SELECT * FROM 
+-- (SELECT * FROM `users` u WHERE u.nickname = '조현수') u
+-- LEFT JOIN `wao_db`.`Users_Parties` up
+-- ON up.`fk-users_parties-no_user` = u.`no_user`
+-- WHERE up.`is_accepted` = 1) up LEFT JOIN `wao_db`.`Parties` p
+-- ON up.`fk-users_parties-no_party` = p.`no_party`;
+
+SELECT u.`no_user`, `fk-users_parties-no_user` FROM 
+(SELECT * FROM `users` u WHERE u.nickname = '조현수') u
+LEFT JOIN `wao_db`.`Users_Parties` up
+ON up.`fk-users_parties-no_user` = u.`no_user`
+WHERE up.`is_accepted` = 1;
+
+
 SELECT * FROM
-(
-SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
-FROM `wao_db`.`Users_Parties` up LEFT JOIN `wao_db`.`Users` u
-ON up.`fk-users_parties-no_user` = u.`no_user`
-WHERE u.`nickname` = '석지명' AND is_accepted = 1) myparty LEFT JOIN `wao_db`.`Parties` p
-ON myparty.`no_party` = p.`no_party`;
-
--- 닉네임으로 가입중인 파티 찾기.
-SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
-FROM `wao_db`.`Users_Parties` up LEFT JOIN `wao_db`.`Users` u
-ON up.`fk-users_parties-no_user` = u.`no_user`
-WHERE u.`nickname` = '조현수' AND is_accepted = 1 ;
-
--- 닉네임으로 신청했으나 가입안된 파티 찾기.
-SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
-FROM `wao_db`.`Users_Parties` up LEFT JOIN `wao_db`.`Users` u
-ON up.`fk-users_parties-no_user` = u.`no_user`
-WHERE u.`nickname` = '조현수' AND is_accepted = 1 ;
+(SELECT *
+FROM `wao_db`.`Users_Parties` 
+WHERE `fk-users_parties-no_user` = 4 AND is_accepted = 1) up LEFT JOIN `wao_db`.`Users` u
+ON up.`fk-users_parties-no_user` = u.`no_user`;
 
 
-SELECT `fk-users_parties-no_party` as no_party, count(*) as cnt
-FROM `users_parties`
-GROUP BY `fk-users_parties-no_party`;
+-- 내 일정 조회하기 서브쿼리
+SELECT us.`fk-users_events-no_event` as `no_event`, us.`fk-users_events-no_user` as `no_party`, u.`no_user`
+FROM `wao_db`.`Users_Events` us LEFT JOIN  `wao_db`.`Users` u 
+ON u.`no_user` = us.`fk-users_events-no_user`
+WHERE u.`no_user` = 1;
 
-SELECT * FROM 
-(SELECT `fk-users_parties-no_party` as no_party, count(*) as cnt
-FROM `users_parties`
-GROUP BY `fk-users_parties-no_party`) cnts LEFT JOIN `wao_db`.`parties` p
-ON cnts.`no_party` = p.`no_party`
-WHERE cnts.`cnt` < p.`size_limit`;
+-- 내 일정 조회하기 (해당 기간에 겹치는 시간이 있는지?)
+SELECT *
+FROM
+(SELECT us.`fk-users_events-no_event` as `no_event`, us.`fk-users_events-no_user` as `no_party`, u.`no_user`
+FROM `wao_db`.`Users_Events` us LEFT JOIN  `wao_db`.`Users` u 
+ON u.`no_user` = us.`fk-users_events-no_user`
+WHERE u.`no_user` = 1) myevent LEFT JOIN `wao_db`.`Events` evnt 
+ON myevent.`no_event` = evnt.`no_event`;
+
+-- 내 일정 조회하기 (해당 기간에 겹치는 시간이 있는지?) TO가 먼저, FROM이 다음.
+SELECT *
+FROM
+(SELECT us.`fk-users_events-no_event` as `no_event`, us.`fk-users_events-no_user` as `no_party`, u.`no_user`
+FROM `wao_db`.`Users_Events` us LEFT JOIN  `wao_db`.`Users` u 
+ON u.`no_user` = us.`fk-users_events-no_user`
+WHERE u.`no_user` = 1) myevent LEFT JOIN `wao_db`.`Events` evnt 
+ON myevent.`no_event` = evnt.`no_event`
+WHERE start_time < '2023-01-10' AND end_time > '2023-01-01';
+
+SELECT * FROM `wao_db`.`Events`;

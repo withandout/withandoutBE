@@ -75,4 +75,8 @@ public class PartyServiceImpl implements PartyService {
         return partyDao.insertPartyMember(partyDto);
     }
 
+    @Override
+    public int modifyPartyImg(PartyDto partyDto) {
+        return partyDao.modifyPartyImg(partyDto);
+    }
 }

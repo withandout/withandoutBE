@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.ssafy.wao.model.dao.EventDao">
+    <resultMap id="UserDtoMap" type="UserDto">
+        <id property="userNo" column="no_user" />
+        <result property="userId" column="user_id"/>
+        <result property="nickname" column="nickname"/>
+        <result property="region" column="region"/>
+        <result property="gender" column="gender"/>
+        <result property="age" column="age"/>
+        <result property="isAuthorized" column="is_authorized"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="imgName" column="img_name"/>
+    </resultMap>
+    <resultMap id="PartyDtoMap" type="PartyDto">
+        <id property="partyNo" column="no_party" />
+        <result property="name" column="name"/>
+        <result property="sports" column="sports"/>
+        <result property="content" column="content"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="imgName" column="img_name"/>
+        <result property="sizeLimit" column="size_limit"/>
+        <result property="userNo" column="fk-users-parties-no_user"/>
+    </resultMap>
+    <resultMap id="EventDtoMap" type="EventDto">
+        <id property="eventNo" column="no_event" />
+        <result property="userNo" column="no_user"/>
+        <result property="partyNo" column="no_party"/>
+        <result property="content" column="content"/>
+        <result property="is_applied" column="isApplied"/>
+        <result property="sttTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+    </resultMap>
+
+    <select id="isAffordable" parameterType="EventDto" resultMap="EventDtoMap">
+        SELECT *
+        FROM
+        (SELECT us.`fk-users_events-no_event` as `no_event`, us.`fk-users_events-no_user` as `no_party`, u.`no_user`
+        FROM `wao_db`.`Users_Events` us LEFT JOIN  `wao_db`.`Users` u
+        ON u.`no_user` = us.`fk-users_events-no_user`
+        WHERE u.`no_user` = #{userNo}) myevent LEFT JOIN `wao_db`.`Events` evnt
+        ON myevent.`no_event` = evnt.`no_event`
+        WHERE start_time &lt; #{endTime} AND end_time &gt; #{sttTime};
+    </select>
+
+
+
+</mapper>

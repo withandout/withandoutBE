@@ -10,9 +10,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.sql.Date;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/party")
@@ -20,16 +23,51 @@ import java.util.List;
 @CrossOrigin("*")
 public class PartyRestController {
 
+    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandoutBE";
+
     @Autowired
     PartyService partyService;
 
     @PostMapping("new")
-    ResponseEntity<Void> makeParty(PartyDto partyDto) {
+    ResponseEntity<Void> makeParty(PartyDto partyDto, @RequestPart(required = false) MultipartFile file) {
 
-        System.out.println(partyDto);
+        // file uploading
+        if (file == null) {
+            /*
+                SET DEFAULT IMAGE
+             */
+            partyDto.setImgName("");
+            partyDto.setImgPath("");
+        }
+        else {
+            String projectPath = WORKPATH + "/data/image/profile/party/";
+
+            UUID uuid = UUID.randomUUID();
+
+            // 파일 이미지 지정.
+            String imgName = uuid + "_" + file.getOriginalFilename();
+
+            // 경로 지정.
+            File saveFile = new File(projectPath, imgName);
+
+            try {
+                file.transferTo(saveFile);
+                partyDto.setImgName(imgName);
+                partyDto.setImgPath(projectPath + imgName);
+            } catch (Exception e) {
+                return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
+            }
+        }
+
+        // make leader member of new Party
         int generatedPartyId = 0;
         if (partyDto != null) {
-            partyService.makeParty(partyDto);
+            int res = partyService.makeParty(partyDto);
+
+            // createError
+            if (res == 0)
+                return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
+
             generatedPartyId = partyDto.getPartyNo();
 
             if (generatedPartyId > 0) {
@@ -45,7 +83,14 @@ public class PartyRestController {
                 insertMember.setInvitedDate(sqlDate);
                 insertMember.setAcceptedDate(sqlDate);
 
-                int res = partyService.insertPartyMember(insertMember);
+                res = 0;
+
+                res = partyService.insertPartyMember(insertMember);
+
+                // leader member application error
+                if (res == 0) {
+                    return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
+                }
                 return new ResponseEntity<Void>(HttpStatus.OK);
             }
         }
@@ -135,11 +180,84 @@ public class PartyRestController {
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
 
-    @DeleteMapping("applicants")
+    @DeleteMapping("apply")
     ResponseEntity<?> declineApplication(@RequestBody PartyDto partyDto) {
         int res = partyService.declineApply(partyDto);
 
         if (res > 0) return new ResponseEntity<Void>(HttpStatus.OK);
+
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    @PutMapping("info/img")
+    ResponseEntity<?> modifyPartyImg(PartyDto partyDto, @RequestPart MultipartFile file) {
+        String projectPath = WORKPATH + "/data/image/profile/party/";
+
+        UUID uuid = UUID.randomUUID();
+
+        // 파일 이미지 지정.
+        String imgName = uuid + "_" + file.getOriginalFilename();
+
+        // 경로 지정.
+        File saveFile = new File(projectPath, imgName);
+
+        try {
+            file.transferTo(saveFile);
+            partyDto.setImgName(imgName);
+            partyDto.setImgPath(projectPath + imgName);
+            partyService.modifyPartyImg(partyDto);
+        } catch (Exception e) {
+            return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
+        }
+
+        return new ResponseEntity<Void>(HttpStatus.OK);
+    }
+
+    /*
+        이벤트 생성
+     */
+    @PostMapping("event")
+    ResponseEntity<?> createEvent(@RequestBody EventDto eventDto) {
+
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /*
+        해당 시간 이벤트 조회.
+        해당 시간 이벤트 생성이나 참여 시 먼저 확인함.
+     */
+    private boolean isAffordable(EventDto eventDto) {
+        // 조회 결과가 0 이상이다 : 겹치는 시간대에 이벤트가 있다.
+        int res = 0;
+
+
+        return true;
+    }
+
+    /*
+        이벤트 참여. event_user 테이블 insert
+     */
+    @PostMapping("event/apply")
+    ResponseEntity<?> applyEvent(@RequestBody EventDto eventDto) {
+        // 참여자 userNo, 이벤트 eventNo 넣어준다.
+
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /*
+        이벤트 참여 취소. event_user 테이블에서 delete
+     */
+    @DeleteMapping("event/cancel")
+    ResponseEntity<?> cancelEvent(@RequestBody EventDto eventDto) {
+
+        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    /*
+        해당 파티의 모든 이벤트 반환
+     */
+    @GetMapping ("event/all")
+    ResponseEntity<?> selectAllEvents(@RequestBody EventDto eventDto) {
 
         return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
     }
