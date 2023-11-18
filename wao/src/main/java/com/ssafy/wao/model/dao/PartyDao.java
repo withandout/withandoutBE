@@ -84,4 +84,12 @@ public interface PartyDao {
         result : int (성공 여부)
      */
     public int insertPartyMember(PartyDto partyDto);
+
+    /*
+        파티 이미지 수정 기능입니다.
+        put
+        params : PartyDto partyDto
+        result : int (성공 여부)
+     */
+    public int modifyPartyImg(PartyDto partyDto);
 }
