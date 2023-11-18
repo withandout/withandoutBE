@@ -167,4 +167,13 @@ public class UserRestController {
 
         return new ResponseEntity<List<PartyDto>> (myParty, HttpStatus.OK);
     }
+
+
+    @PostMapping("validate")
+    ResponseEntity<Void> validateUserInfo(UserDto userDto) {
+        int res = userService.validateUserInfo(userDto);
+
+        if (res > 0) return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
+        return new ResponseEntity<Void> (HttpStatus.OK);
+    }
 }

@@ -3,12 +3,12 @@ package com.ssafy.wao.model.dto;
 public class UserDto {
     // imgPath, imgName default 주세요...
 
-    private int userNo;
-    private String userId;
-    private String password;
-    private String nickname;
-    private String region;
-    private String gender;
+    private int userNo = -1;
+    private String userId = "";
+    private String password = "";
+    private String nickname = "";
+    private String region = "";
+    private String gender = "";
     private int age = -1;
     private int isAuthorized = 0;
     private String content = "";

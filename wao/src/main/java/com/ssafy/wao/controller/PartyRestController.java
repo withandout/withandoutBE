@@ -4,6 +4,7 @@ package com.ssafy.wao.controller;
 import com.ssafy.wao.model.dto.EventDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
+import com.ssafy.wao.model.service.EventService;
 import com.ssafy.wao.model.service.PartyService;
 import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,9 @@ public class PartyRestController {
 
     @Autowired
     PartyService partyService;
+
+    @Autowired
+    EventService eventService;
 
     @PostMapping("new")
     ResponseEntity<Void> makeParty(PartyDto partyDto, @RequestPart(required = false) MultipartFile file) {
@@ -214,51 +218,19 @@ public class PartyRestController {
     }
 
     /*
-        이벤트 생성
-     */
-    @PostMapping("event")
-    ResponseEntity<?> createEvent(@RequestBody EventDto eventDto) {
-
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    /*
-        해당 시간 이벤트 조회.
-        해당 시간 이벤트 생성이나 참여 시 먼저 확인함.
-     */
-    private boolean isAffordable(EventDto eventDto) {
-        // 조회 결과가 0 이상이다 : 겹치는 시간대에 이벤트가 있다.
-        int res = 0;
-
-
-        return true;
-    }
-
-    /*
-        이벤트 참여. event_user 테이블 insert
-     */
-    @PostMapping("event/apply")
-    ResponseEntity<?> applyEvent(@RequestBody EventDto eventDto) {
-        // 참여자 userNo, 이벤트 eventNo 넣어준다.
-
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    /*
-        이벤트 참여 취소. event_user 테이블에서 delete
-     */
-    @DeleteMapping("event/cancel")
-    ResponseEntity<?> cancelEvent(@RequestBody EventDto eventDto) {
-
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-    }
-
-    /*
         해당 파티의 모든 이벤트 반환
+        params: partyNo, userNo, 현재 시간.
+        - 현재 시각 이후를 시작 시간으로 갖는 이벤트를 반환
+        - 현재 파티 넘버와 유저 넘버를 전달해서
+        - 해당 파티 소속 이벤트를 조회하고, 해당 유저가 해당 파티에 참석 상태인지 아닌지도 반환 .
      */
     @GetMapping ("event/all")
     ResponseEntity<?> selectAllEvents(@RequestBody EventDto eventDto) {
 
-        return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        List<EventDto> list = eventService.selectAllEvents(eventDto);
+
+        if (list == null)
+            return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
+        return new ResponseEntity<List<EventDto>>(list, HttpStatus.OK);
     }
 }

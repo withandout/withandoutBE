@@ -9,9 +9,9 @@ public interface EventDao {
 
     public int createEvent(EventDto eventDto);
 
-    public int applyEvent(EventDto eventDto);
+    public int joinEvent(EventDto eventDto);
 
     public int cancelEvent(EventDto eventDto);
 
-    public int selectAllEvents(EventDto eventDto);
+    public List<EventDto> selectAllEvents(EventDto eventDto);
 }

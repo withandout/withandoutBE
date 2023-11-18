@@ -62,4 +62,9 @@ public class UserServiceImpl implements UserService {
     public List<PartyDto> selectUserParties(String nickname) {
         return userDao.selectUserParties(nickname);
     }
+
+    @Override
+    public int validateUserInfo(UserDto userDto) {
+        return (userDao.validateUserInfo(userDto) == null ? 0 : 1);
+    }
 }

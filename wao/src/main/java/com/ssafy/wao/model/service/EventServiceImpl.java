@@ -5,6 +5,7 @@ import com.ssafy.wao.model.dto.EventDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -22,26 +23,30 @@ public class EventServiceImpl implements EventService {
 
     @Override
     public int createEvent(EventDto eventDto) {
-        // 먼저 생성 가능한지 먼저 확인함.
-        // 자신의 일정 조회해서 겹치는 일정이 있는지.
+        // 유저가 해당 시간대에 참여중인 일정 반환.
+        List<EventDto> eventsApplied = eventDao.isAffordable(eventDto);
 
-        return 0;
+        // 참여 중인 일정이 있다면 실패
+        if (eventsApplied.size() != 0) return 0;
+        if (eventDao.createEvent(eventDto) == 0) return 0;
+        System.out.println("=====EVENT NO==========" + eventDto.getEventNo() + "====================");
+        if (eventDao.joinEvent(eventDto) == 0) return 0;
+
+        return 1;
     }
 
     @Override
     public int applyEvent(EventDto eventDto) {
-        // 먼저 신청 가능한지 먼저 확인함.
-        // 자신의 일정 조회해서 겹치는 일정이 있는지.
-        return 0;
+        return eventDao.joinEvent(eventDto);
     }
 
     @Override
     public int cancelEvent(EventDto eventDto) {
-        return 0;
+        return eventDao.cancelEvent(eventDto);
     }
 
     @Override
-    public int selectAllEvents(EventDto eventDto) {
-        return 0;
+    public List<EventDto> selectAllEvents(EventDto eventDto) {
+        return eventDao.selectAllEvents(eventDto);
     }
 }
