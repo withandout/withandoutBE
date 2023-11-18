@@ -31,9 +31,4 @@ public interface EventService {
         이벤트 참여 취소. event_user 테이블에서 delete
      */
     public int cancelEvent(EventDto eventDto);
-
-    /*
-        해당 파티의 모든 이벤트 반환
-     */
-    public List<EventDto> selectAllEvents(EventDto eventDto);
 }

@@ -124,4 +124,8 @@
         WHERE `no_party` = #{partyNo}
     </update>
 
+    <select id="selectAllEvents" parameterType="PartyDto" resultMap="EventDtoMap">
+
+
+    </select>
 </mapper>

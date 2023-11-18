@@ -51,8 +51,8 @@ public class PartyServiceImpl implements PartyService {
     }
 
     @Override
-    public List<EventDto> selectAllEvents(int partyNo) {
-        return partyDao.selectAllEvents(partyNo);
+    public List<EventDto> selectAllEvents(PartyDto partyDto) {
+        return partyDao.selectAllEvents(partyDto);
     }
 
     @Override

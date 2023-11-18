@@ -29,7 +29,6 @@ public class EventServiceImpl implements EventService {
         // 참여 중인 일정이 있다면 실패
         if (eventsApplied.size() != 0) return 0;
         if (eventDao.createEvent(eventDto) == 0) return 0;
-        System.out.println("=====EVENT NO==========" + eventDto.getEventNo() + "====================");
         if (eventDao.joinEvent(eventDto) == 0) return 0;
 
         return 1;
@@ -43,10 +42,5 @@ public class EventServiceImpl implements EventService {
     @Override
     public int cancelEvent(EventDto eventDto) {
         return eventDao.cancelEvent(eventDto);
-    }
-
-    @Override
-    public List<EventDto> selectAllEvents(EventDto eventDto) {
-        return eventDao.selectAllEvents(eventDto);
     }
 }

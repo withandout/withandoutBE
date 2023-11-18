@@ -155,9 +155,20 @@ public class PartyRestController {
         return new ResponseEntity<UserDto>(leader, HttpStatus.OK);
     }
 
-    @GetMapping("events/{partyNo}")
-    ResponseEntity<?> selectAllEvents(@PathVariable int partyNo) {
-        List<EventDto> partyEvents = partyService.selectAllEvents(partyNo);
+
+    /*
+        해당 파티의 모든 이벤트 반환
+        params: partyNo, userNo, 현재 시간.
+        - 현재 시각 이후를 시작 시간으로 갖는 이벤트를 반환
+        - 현재 파티 넘버와 유저 넘버를 전달해서
+        - 해당 파티 소속 이벤트를 조회하고, 해당 유저가 해당 파티에 참석 상태인지 아닌지도 반환 .
+     */
+    @GetMapping("events")
+    ResponseEntity<?> selectAllEvents(@RequestBody PartyDto partyDto) {
+        // 현재 시간 주입.
+        partyDto.setInvitedDate(new Date(System.currentTimeMillis()));
+
+        List<EventDto> partyEvents = partyService.selectAllEvents(partyDto);
 
         if (partyEvents == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 
@@ -215,22 +226,5 @@ public class PartyRestController {
         }
 
         return new ResponseEntity<Void>(HttpStatus.OK);
-    }
-
-    /*
-        해당 파티의 모든 이벤트 반환
-        params: partyNo, userNo, 현재 시간.
-        - 현재 시각 이후를 시작 시간으로 갖는 이벤트를 반환
-        - 현재 파티 넘버와 유저 넘버를 전달해서
-        - 해당 파티 소속 이벤트를 조회하고, 해당 유저가 해당 파티에 참석 상태인지 아닌지도 반환 .
-     */
-    @GetMapping ("event/all")
-    ResponseEntity<?> selectAllEvents(@RequestBody EventDto eventDto) {
-
-        List<EventDto> list = eventService.selectAllEvents(eventDto);
-
-        if (list == null)
-            return new ResponseEntity<Void>(HttpStatus.NOT_IMPLEMENTED);
-        return new ResponseEntity<List<EventDto>>(list, HttpStatus.OK);
     }
 }
