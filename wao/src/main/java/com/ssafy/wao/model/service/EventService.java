@@ -35,5 +35,5 @@ public interface EventService {
     /*
         해당 파티의 모든 이벤트 반환
      */
-    public int selectAllEvents(EventDto eventDto);
+    public List<EventDto> selectAllEvents(EventDto eventDto);
 }

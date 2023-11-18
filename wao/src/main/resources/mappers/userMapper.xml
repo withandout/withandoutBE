@@ -117,4 +117,9 @@
         WHERE u.`nickname` = #{nickname} AND is_accepted = 0) myparty LEFT JOIN `wao_db`.`Parties` p
         ON myparty.`no_party` = p.`no_party`;
     </select>
+
+    <select id="validateUserInfo" parameterType="UserDto" resultMap="UserDtoMap">
+        SELECT * FROM `wao_db`.`Users` u
+        WHERE u.`user_id` = #{userId} OR u.`nickname` = #{nickname}
+    </select>
 </mapper>

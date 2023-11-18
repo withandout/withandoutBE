@@ -64,4 +64,10 @@ public interface UserService {
         int userNo
      */
     public List<PartyDto> selectUserParties(String nickname);
+
+    /*
+        유저의 정보 중복 여부 확인
+        UserDto userDto
+     */
+    public int validateUserInfo(UserDto userDto);
 }

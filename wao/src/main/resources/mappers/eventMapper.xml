@@ -45,7 +45,30 @@
         ON myevent.`no_event` = evnt.`no_event`
         WHERE start_time &lt; #{endTime} AND end_time &gt; #{sttTime};
     </select>
+    <!-- 이벤트 생성 -->
+    <insert id="createEvent" parameterType="EventDto" useGeneratedKeys="true" keyColumn="no_event" keyProperty="eventNo">
+        INSERT INTO `wao_db`.`Events`
+        (`start_time`, `end_time`, `content`, `fk-parties-events-no_party`)
+        VALUES
+        (#{sttTime}, #{endTime}, #{content}, #{partyNo});
+    </insert>
+    <!-- 이벤트 참여 등록 -->
+    <insert id="joinEvent" parameterType="EventDto">
+        INSERT INTO `wao_db`.`Users_Events`
+        (`fk-users_events-no_user`, `fk-users_events-no_event`)
+        VALUES
+        (#{userNo}, #{eventNo})
+    </insert>
+
+    <delete id="cancelEvent" parameterType="EventDto">
+        DELETE FROM `wao_db`.`Users_Events`
+        WHERE `fk-users_events-no_user` = #{userNo} AND `fk-users_events-no_event` = #{eventNo}
+    </delete>
 
 
+    <!-- 파티의 모든 일정 조회. 지금으로부터 일주일 -->
+    <select id="selectAllEvents" parameterType="EventDto" resultMap="EventDtoMap">
 
+
+    </select>
 </mapper>
