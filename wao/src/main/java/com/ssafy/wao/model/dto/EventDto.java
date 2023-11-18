@@ -10,7 +10,8 @@ public class EventDto {
     private int partyNo;
     private int userNo;
     private String content;
-    private int is_applied;
+    private int isApplied;
+    private int noParticipant;
 
     public int getEventNo() {
         return eventNo;
@@ -60,12 +61,20 @@ public class EventDto {
         this.content = content;
     }
 
-    public int getIs_applied() {
-        return is_applied;
+    public int getIsApplied() {
+        return isApplied;
     }
 
-    public void setIs_applied(int is_applied) {
-        this.is_applied = is_applied;
+    public void setIsApplied(int isApplied) {
+        this.isApplied = isApplied;
+    }
+
+    public int getNoParticipant() {
+        return noParticipant;
+    }
+
+    public void setNoParticipant(int noParticipant) {
+        this.noParticipant = noParticipant;
     }
 
     @Override
@@ -77,7 +86,8 @@ public class EventDto {
                 ", partyNo=" + partyNo +
                 ", userNo=" + userNo +
                 ", content='" + content + '\'' +
-                ", is_applied=" + is_applied +
+                ", isApplied=" + isApplied +
+                ", noParticipant=" + noParticipant +
                 '}';
     }
 }

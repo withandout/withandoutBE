@@ -208,12 +208,12 @@ VALUES
 
 INSERT INTO `wao_db`.`Events` (`start_time`, `end_time`, `content`, `fk-parties-events-no_party`)
 VALUES
-('2022-11-29 09:00:00.007', '2023-12-31 09:00:00.007', '스케쥴1', 1),
-('2022-01-02 09:00:00.007', '2023-12-31 09:00:00.007', '스케쥴2', 1),
-('2022-12-31 09:00:00.007', '2023-01-05 09:00:00.007', '스케쥴3', 1),
-('2022-01-02 09:00:00.007', '2023-01-05 09:00:00.007', '스케쥴4', 1),
-('2022-11-30 09:00:00.007', '2022-12-21 09:00:00.007', '스케쥴5', 1),
-('2023-12-31 09:00:00.007', '2024-12-31 09:00:00.007', '스케쥴6', 1);
+('2023-11-17 09:00:00.007', '2023-12-31 09:00:00.007', '스케쥴1', 1),
+('2023-11-19 09:00:00.007', '2023-12-31 09:00:00.007', '스케쥴2', 1),
+('2023-11-21 09:00:00.007', '2023-01-05 09:00:00.007', '스케쥴3', 1),
+('2023-11-23 09:00:00.007', '2023-01-05 09:00:00.007', '스케쥴4', 1),
+('2023-12-27 09:00:00.007', '2022-12-21 09:00:00.007', '스케쥴5', 1),
+('2023-12-29 09:00:00.007', '2024-12-31 09:00:00.007', '스케쥴6', 1);
 
 
 
@@ -221,7 +221,11 @@ INSERT INTO `Users_Events` (`fk-users_events-no_user`, `fk-users_events-no_event
 VALUES
 (1, 1),
 (1, 2),
-(1, 3),
+(10, 2),
+(2, 2), 
+(3, 2), 
+(4, 2),
+(2, 3),  
 (1, 4),
 (1, 5),
 (1, 6);
@@ -321,4 +325,63 @@ WHERE u.`no_user` = 1) myevent LEFT JOIN `wao_db`.`Events` evnt
 ON myevent.`no_event` = evnt.`no_event`
 WHERE start_time < '2023-01-10' AND end_time > '2023-01-01';
 
-SELECT * FROM `wao_db`.`Events`;
+SELECT *
+FROM `wao_db`.`Users_Events` usev LEFT JOIN `wao_db`.`Events` evnt
+ON evnt.`no_event` = usev.`fk-users_events-no_event`;
+
+SELECT * FROM `wao_db`.`Users_Events`;
+
+DELETE FROM `wao_db`.`Users_Events`
+        WHERE `fk-users_events-no_user` = 1 AND `fk-users_events-no_event` = 1;
+
+-- SELECT `no_event`, `start_time`, `end_time`, `content`, `fk-parties-events-no_party`, 
+-- CASE WHEN `fk-users_events-no_user` IS NULL THEN 0 ELSE 1 END AS `is_applied`
+
+-- CASE WHEN `fk-users_events-no_user` IS NULL THEN 0 ELSE 1 END AS `is_applied`;
+
+-- 현재 참석자 수 조회 (완성)
+SELECT `no_event`, `start_time`, `end_time`, `content`, `fk-parties-events-no_party`, COUNT(*) as `no_participant`,
+CASE WHEN FIND_IN_SET('1', GROUP_CONCAT(ue.`fk-users_events-no_user`)) > 0 THEN '1' ELSE '0' END AS my_attendance_status
+FROM (
+SELECT * FROM `wao_db`.`Events` e
+	WHERE `fk-parties-events-no_party` = 1
+    AND e.`start_time` > NOW() AND e.`start_time` <= date_add(NOW(), INTERVAL 7 DAY)) pe LEFT JOIN `wao_db`.`Users_Events` ue
+    ON pe.`no_event` = ue.`fk-users_events-no_event`
+    GROUP BY `no_event`;
+
+-- 
+
+
+SELECT *, GROUP_CONCAT(`fk-users_events-no_user`) as participant_ids FROM (
+SELECT * FROM `wao_db`.`Events` e
+	WHERE `fk-parties-events-no_party` = 1
+    AND e.`start_time` > NOW() AND e.`start_time` <= date_add(NOW(), INTERVAL 7 DAY)) pe LEFT JOIN `wao_db`.`Users_Events` ue
+    ON pe.`no_event` = ue.`fk-users_events-no_event`
+    GROUP BY `no_event`;
+    
+-- CASE WHEN `fk-users_events-no_user` = 1 THEN 1 ELSE 0 END AS `is_me`
+    
+
+-- 
+
+SELECT pe.*, COUNT(*) as no_participant 
+FROM (
+    SELECT e.*
+    FROM `wao_db`.`Events` e
+    WHERE `fk-parties-events-no_party` = 1
+        AND e.`start_time` > NOW() AND e.`start_time` <= date_add(NOW(), INTERVAL 7 DAY)
+) pe
+LEFT JOIN (
+    SELECT `fk-users_events-no_event`, GROUP_CONCAT(`fk-users_events-no_user`) AS `fk-users_events-no_user`
+    FROM `wao_db`.`Users_Events`
+    GROUP BY `fk-users_events-no_event`
+) ue ON pe.`no_event` = ue.`fk-users_events-no_event`
+GROUP BY pe.`no_event`, pe.`start_time`, pe.`end_time`, pe.`content`, pe.`fk-parties-events-no_party`;
+
+
+SELECT * FROM `wao_db`.`Events` e
+	WHERE `fk-parties-events-no_party` = 1
+    AND e.`start_time` > NOW() AND e.`start_time` <= date_add(NOW(), INTERVAL 7 DAY)
+    
+    
+    

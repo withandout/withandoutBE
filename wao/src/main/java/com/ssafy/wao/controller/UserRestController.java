@@ -31,7 +31,7 @@ public class UserRestController {
     UserService userService;
 
     @PostMapping("signup")
-    ResponseEntity<Void> signup(UserDto userDto, @RequestPart(required = false) MultipartFile file) {
+    ResponseEntity<Void> signup(@RequestPart("user") UserDto userDto, @RequestPart(required = false, name="image") MultipartFile file) {
         // multipartformdata 확인 (RequestBody 풀고) == Null 일 경우 default Path 주기.
 
         int res = 0;
@@ -114,7 +114,7 @@ public class UserRestController {
 
     // 파일 업로드 시 RequestBody 사용 불가.
     @PutMapping("info/img")
-    ResponseEntity<Void> modifyUserImg(UserDto userDto, @RequestPart MultipartFile file) {
+    ResponseEntity<Void> modifyUserImg(@RequestBody UserDto userDto, @RequestPart MultipartFile file) {
         String projectPath = WORKPATH + "/data/image/profile/user/";
 
         UUID uuid = UUID.randomUUID();
@@ -169,7 +169,7 @@ public class UserRestController {
     }
 
     @PostMapping("validate")
-    ResponseEntity<Void> validateUserInfo(UserDto userDto) {
+    ResponseEntity<Void> validateUserInfo(@RequestBody UserDto userDto) {
         int res = userService.validateUserInfo(userDto);
 
         if (res > 0) return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
