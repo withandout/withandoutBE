@@ -27,9 +27,11 @@
     </resultMap>
     <resultMap id="EventDtoMap" type="EventDto">
         <id property="eventNo" column="no_event"/>
-        <result property="startTime" column="start_time"/>
+        <result property="sttTime" column="start_time"/>
         <result property="endTime" column="end_time"/>
-        <result property="partyNo" column="fk-parties-events-no_parties"/>
+        <result property="partyNo" column="fk-parties-events-no_party"/>
+        <result property="isApplied" column="is_applied"/>
+        <result property="noParticipant" column="no_participant"/>
     </resultMap>
 
     <insert id="makeParty" parameterType="PartyDto" useGeneratedKeys="true" keyColumn="no_party" keyProperty="partyNo">
@@ -113,19 +115,21 @@
         WHERE `fk-users_parties-no_user` = #{userNo} AND `fk-users_parties-no_party` = #{partyNo};
     </delete>
 
-    <!-- 파티 이벤트 전체 조회 -->
-    <select id="selectAllEvents">
-
-    </select>
-
     <update id="modifyUserImg" parameterType="PartyDto">
         UPDATE `wao_db`.`parties`
         SET img_path = #{imgPath}, img_name = #{imgName}
         WHERE `no_party` = #{partyNo}
     </update>
 
+    <!-- 소속 파티의 일정 조회. 앞으로 근 일주일간. 내 참가여부도 같이 조회. -->
     <select id="selectAllEvents" parameterType="PartyDto" resultMap="EventDtoMap">
-
-
+        SELECT `no_event`, `start_time`, `end_time`, `content`, `fk-parties-events-no_party`, COUNT(*) as `no_participant`,
+        CASE WHEN FIND_IN_SET(#{userNo}, GROUP_CONCAT(ue.`fk-users_events-no_user`)) > 0 THEN '1' ELSE '0' END AS is_applied
+        FROM (
+        SELECT * FROM `wao_db`.`Events` e
+        WHERE `fk-parties-events-no_party` = #{partyNo}
+        AND e.`start_time` &gt; NOW() AND e.`start_time` &lt; date_add(NOW(), INTERVAL 7 DAY)) pe LEFT JOIN `wao_db`.`Users_Events` ue
+        ON pe.`no_event` = ue.`fk-users_events-no_event`
+        GROUP BY `no_event`;
     </select>
 </mapper>

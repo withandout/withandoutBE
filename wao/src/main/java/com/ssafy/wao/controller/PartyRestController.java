@@ -33,7 +33,7 @@ public class PartyRestController {
     EventService eventService;
 
     @PostMapping("new")
-    ResponseEntity<Void> makeParty(PartyDto partyDto, @RequestPart(required = false) MultipartFile file) {
+    ResponseEntity<Void> makeParty(@RequestPart("party") PartyDto partyDto, @RequestPart(required = false, name="image") MultipartFile file) {
 
         // file uploading
         if (file == null) {
@@ -163,7 +163,7 @@ public class PartyRestController {
         - 현재 파티 넘버와 유저 넘버를 전달해서
         - 해당 파티 소속 이벤트를 조회하고, 해당 유저가 해당 파티에 참석 상태인지 아닌지도 반환 .
      */
-    @GetMapping("events")
+    @PostMapping("events")
     ResponseEntity<?> selectAllEvents(@RequestBody PartyDto partyDto) {
         // 현재 시간 주입.
         partyDto.setInvitedDate(new Date(System.currentTimeMillis()));
