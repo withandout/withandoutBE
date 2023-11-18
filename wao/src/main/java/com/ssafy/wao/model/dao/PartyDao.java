@@ -51,9 +51,10 @@ public interface PartyDao {
 
     /*
         파티넘버와 일치하는 모든 이벤트를 조회하는 기능입니다.
-        partyNo를 받아서 EventDto 반환
+        params: partyNo, invitedDate(현재 시간 기준 일주일 조회)
+        return:
      */
-    public List<EventDto> selectAllEvents(int partyNo);
+    public List<EventDto> selectAllEvents(PartyDto partyDto);
 
     /*
         파티넘버와 일치하는 파티의 정원수를 조회하는 기능입니다.

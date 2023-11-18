@@ -12,6 +12,4 @@ public interface EventDao {
     public int joinEvent(EventDto eventDto);
 
     public int cancelEvent(EventDto eventDto);
-
-    public List<EventDto> selectAllEvents(EventDto eventDto);
 }
