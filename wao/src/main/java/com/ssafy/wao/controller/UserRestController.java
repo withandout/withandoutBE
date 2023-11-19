@@ -36,12 +36,17 @@ public class UserRestController {
 
         int res = 0;
 
+        // 기본 이미지 경로.
+        String projectPath = WORKPATH + "/data/image/profile/user/";
+
         if (file == null) {
+            String imgName = "default_user.png";
+
+            userDto.setImgName(imgName);
+            userDto.setImgPath(projectPath + imgName);
             res = userService.signup(userDto);
         }
         else {
-            String projectPath = WORKPATH + "/data/image/profile/user/";
-
             UUID uuid = UUID.randomUUID();
 
             // 파일 이미지 지정.

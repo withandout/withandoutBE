@@ -35,16 +35,17 @@ public class PartyRestController {
     @PostMapping("new")
     ResponseEntity<Void> makeParty(@RequestPart("party") PartyDto partyDto, @RequestPart(required = false, name="image") MultipartFile file) {
 
+        String projectPath = WORKPATH + "/data/image/profile/party/";
+
         // file uploading
         if (file == null) {
-            /*
-                SET DEFAULT IMAGE
-             */
-            partyDto.setImgName("");
-            partyDto.setImgPath("");
+
+            String imgName = "default_party.png";
+
+            partyDto.setImgName(imgName);
+            partyDto.setImgPath(projectPath + imgName);
         }
         else {
-            String projectPath = WORKPATH + "/data/image/profile/party/";
 
             UUID uuid = UUID.randomUUID();
 
