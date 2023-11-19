@@ -24,7 +24,7 @@ import java.util.UUID;
 @CrossOrigin("*")
 public class PartyRestController {
 
-    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandoutBE";
+    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandout/withandoutFE/withandoutFE/src/assets";
 
     @Autowired
     PartyService partyService;
@@ -35,15 +35,13 @@ public class PartyRestController {
     @PostMapping("new")
     ResponseEntity<Void> makeParty(@RequestPart("party") PartyDto partyDto, @RequestPart(required = false, name="image") MultipartFile file) {
 
-        String projectPath = WORKPATH + "/data/image/profile/party/";
-
         // file uploading
         if (file == null) {
 
             String imgName = "default_party.png";
 
             partyDto.setImgName(imgName);
-            partyDto.setImgPath(projectPath + imgName);
+            partyDto.setImgPath(WORKPATH + imgName);
         }
         else {
 
@@ -53,12 +51,12 @@ public class PartyRestController {
             String imgName = uuid + "_" + file.getOriginalFilename();
 
             // 경로 지정.
-            File saveFile = new File(projectPath, imgName);
+            File saveFile = new File(WORKPATH, imgName);
 
             try {
                 file.transferTo(saveFile);
                 partyDto.setImgName(imgName);
-                partyDto.setImgPath(projectPath + imgName);
+                partyDto.setImgPath(WORKPATH + imgName);
             } catch (Exception e) {
                 return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
             }
@@ -216,20 +214,18 @@ public class PartyRestController {
 
     @PutMapping("info/img")
     ResponseEntity<?> modifyPartyImg(PartyDto partyDto, @RequestPart MultipartFile file) {
-        String projectPath = WORKPATH + "/data/image/profile/party/";
-
         UUID uuid = UUID.randomUUID();
 
         // 파일 이미지 지정.
         String imgName = uuid + "_" + file.getOriginalFilename();
 
         // 경로 지정.
-        File saveFile = new File(projectPath, imgName);
+        File saveFile = new File(WORKPATH, imgName);
 
         try {
             file.transferTo(saveFile);
             partyDto.setImgName(imgName);
-            partyDto.setImgPath(projectPath + imgName);
+            partyDto.setImgPath(WORKPATH + imgName);
             partyService.modifyPartyImg(partyDto);
         } catch (Exception e) {
             return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);

@@ -197,6 +197,7 @@ VALUES
 INSERT INTO `wao_db`.`users_parties`
 (`fk-users_parties-no_party`, `fk-users_parties-no_user`, `is_accepted`, `invited_date`, `accepted_date`)
 VALUES
+
 (1, 4 , 1, '2023-04-26 09:00:00.007', '2019-05-26 09:00:00.007'),
 (2, 4 , 1, '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
 (1, 5 , 1, '2023-04-27 09:00:00.007', '2019-05-27 09:00:00.007'),
@@ -348,40 +349,3 @@ SELECT * FROM `wao_db`.`Events` e
     AND e.`start_time` > NOW() AND e.`start_time` <= date_add(NOW(), INTERVAL 7 DAY)) pe LEFT JOIN `wao_db`.`Users_Events` ue
     ON pe.`no_event` = ue.`fk-users_events-no_event`
     GROUP BY `no_event`;
-
--- 
-
-
-SELECT *, GROUP_CONCAT(`fk-users_events-no_user`) as participant_ids FROM (
-SELECT * FROM `wao_db`.`Events` e
-	WHERE `fk-parties-events-no_party` = 1
-    AND e.`start_time` > NOW() AND e.`start_time` <= date_add(NOW(), INTERVAL 7 DAY)) pe LEFT JOIN `wao_db`.`Users_Events` ue
-    ON pe.`no_event` = ue.`fk-users_events-no_event`
-    GROUP BY `no_event`;
-    
--- CASE WHEN `fk-users_events-no_user` = 1 THEN 1 ELSE 0 END AS `is_me`
-    
-
--- 
-
-SELECT pe.*, COUNT(*) as no_participant 
-FROM (
-    SELECT e.*
-    FROM `wao_db`.`Events` e
-    WHERE `fk-parties-events-no_party` = 1
-        AND e.`start_time` > NOW() AND e.`start_time` <= date_add(NOW(), INTERVAL 7 DAY)
-) pe
-LEFT JOIN (
-    SELECT `fk-users_events-no_event`, GROUP_CONCAT(`fk-users_events-no_user`) AS `fk-users_events-no_user`
-    FROM `wao_db`.`Users_Events`
-    GROUP BY `fk-users_events-no_event`
-) ue ON pe.`no_event` = ue.`fk-users_events-no_event`
-GROUP BY pe.`no_event`, pe.`start_time`, pe.`end_time`, pe.`content`, pe.`fk-parties-events-no_party`;
-
-
-SELECT * FROM `wao_db`.`Events` e
-	WHERE `fk-parties-events-no_party` = 1
-    AND e.`start_time` > NOW() AND e.`start_time` <= date_add(NOW(), INTERVAL 7 DAY)
-    
-    
-    
