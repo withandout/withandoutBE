@@ -71,7 +71,7 @@ public class UserRestController {
     }
 
     @PostMapping("login")
-    ResponseEntity<Void> login(@RequestBody UserDto userDto, HttpSession session) {
+    ResponseEntity<?> login(@RequestBody UserDto userDto, HttpSession session) {
         UserDto loginUser = userService.login(userDto);
 
         if (loginUser == null) {
@@ -79,7 +79,7 @@ public class UserRestController {
         }
 
         session.setAttribute("loginUser", loginUser);
-        return new ResponseEntity<Void> (HttpStatus.OK);
+        return new ResponseEntity<UserDto> (loginUser, HttpStatus.OK);
     }
 
     @GetMapping("logout")

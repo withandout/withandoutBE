@@ -36,7 +36,7 @@
 
     <!-- 로그인 -->
     <select id="login" parameterType="UserDto" resultMap="UserDtoMap">
-        SELECT `no_user`, `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        SELECT `no_user`, `user_id`
         FROM `wao_db`.`USERS` u
         WHERE u.user_id = #{userId} AND u.password = #{password}
     </select>
