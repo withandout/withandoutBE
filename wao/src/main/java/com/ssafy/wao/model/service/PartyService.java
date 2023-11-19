@@ -93,4 +93,11 @@ public interface PartyService {
         result : int (성공 여부)
      */
     public int modifyPartyImg(PartyDto partyDto);
+
+    /*
+    파티의 정보 중복 여부 확인
+    params : PartyDto partyDto
+    result : int (존재 여부)
+    */
+    public int validatePartyInfo(PartyDto partyDto);
 }

@@ -93,4 +93,11 @@ public interface PartyDao {
         result : int (성공 여부)
      */
     public int modifyPartyImg(PartyDto partyDto);
+
+    /*
+        파티의 정보 중복 여부 확인
+        params : PartyDto partyDto
+        result : PartyDto (중복 레코드)
+     */
+    public PartyDto validatePartyInfo(PartyDto partyDto);
 }

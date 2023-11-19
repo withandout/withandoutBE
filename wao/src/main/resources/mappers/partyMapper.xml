@@ -132,4 +132,9 @@
         ON pe.`no_event` = ue.`fk-users_events-no_event`
         GROUP BY `no_event`;
     </select>
+
+    <select id="validatePartyInfo" parameterType="PartyDto" resultMap="PartyDtoMap">
+        SELECT * FROM `wao_db`.`Parties` p
+        WHERE p.`name` = #{name}
+    </select>
 </mapper>

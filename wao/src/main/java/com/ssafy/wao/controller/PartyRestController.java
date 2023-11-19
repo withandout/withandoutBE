@@ -102,6 +102,15 @@ public class PartyRestController {
         return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @PostMapping("validate")
+    ResponseEntity<Void> validatePartyInfo(@RequestBody PartyDto partyDto) {
+        int res = partyService.validatePartyInfo(partyDto);
+
+        if (res > 0) return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
+
+        return new ResponseEntity<Void> (HttpStatus.OK);
+    }
+
     @GetMapping("info/{partyNo}")
     ResponseEntity<?> selectParty(int partyNo) {
         PartyDto party = partyService.selectParty(partyNo);
@@ -129,7 +138,7 @@ public class PartyRestController {
         return new ResponseEntity<List<PartyDto>>(partyList, HttpStatus.OK);
     }
 
-    @GetMapping("members/{partyNo}")
+    @GetMapping("member/{partyNo}")
     ResponseEntity<?> selectMembers(@PathVariable int partyNo) {
         List<UserDto> partyMembers = partyService.selectMembers(partyNo);
 
@@ -147,7 +156,7 @@ public class PartyRestController {
         return new ResponseEntity<List<UserDto>>(partyApplicants, HttpStatus.OK);
     }
 
-    @GetMapping("members/leader/{partyNo}")
+    @GetMapping("member/leader/{partyNo}")
     ResponseEntity<?> selectLeader(@PathVariable int partyNo) {
         UserDto leader = partyService.selectLeader(partyNo);
 
@@ -164,7 +173,7 @@ public class PartyRestController {
         - 현재 파티 넘버와 유저 넘버를 전달해서
         - 해당 파티 소속 이벤트를 조회하고, 해당 유저가 해당 파티에 참석 상태인지 아닌지도 반환 .
      */
-    @PostMapping("events")
+    @PostMapping("event")
     ResponseEntity<?> selectAllEvents(@RequestBody PartyDto partyDto) {
         // 현재 시간 주입.
         partyDto.setInvitedDate(new Date(System.currentTimeMillis()));

@@ -118,8 +118,8 @@ public class UserRestController {
     }
 
     // 파일 업로드 시 RequestBody 사용 불가.
-    @PutMapping("info/img")
-    ResponseEntity<Void> modifyUserImg(@RequestBody UserDto userDto, @RequestPart MultipartFile file) {
+    @PostMapping("info/img")
+    ResponseEntity<Void> modifyUserImg(@RequestPart("user") UserDto userDto, @RequestPart(required = false, name="image") MultipartFile file) {
         String projectPath = WORKPATH + "/data/image/profile/user/";
 
         UUID uuid = UUID.randomUUID();
