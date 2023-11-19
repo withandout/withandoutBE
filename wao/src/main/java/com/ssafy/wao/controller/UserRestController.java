@@ -88,9 +88,9 @@ public class UserRestController {
         return new ResponseEntity<Void> (HttpStatus.OK);
     }
 
-    @GetMapping("info/{nickname}")
-    ResponseEntity<?> selectUser(@PathVariable String nickname) {
-        UserDto user = userService.selectUser(nickname);
+    @GetMapping("info/{userNo}")
+    ResponseEntity<?> selectUser(@PathVariable int userNo) {
+        UserDto user = userService.selectUser(userNo);
 
         if (user == null) return new ResponseEntity<Void> (HttpStatus.NOT_FOUND);
 
@@ -165,10 +165,10 @@ public class UserRestController {
     }
 
     // party Controller 이동 여부 확인
-    @GetMapping("myparty/{nickname}")
-    ResponseEntity<List<PartyDto>> selectUserParties(String nickname) {
+    @GetMapping("myparty/{userNo}")
+    ResponseEntity<List<PartyDto>> selectUserParties(@PathVariable int userNo) {
 
-        List<PartyDto> myParty = userService.selectUserParties(nickname);
+        List<PartyDto> myParty = userService.selectUserParties(userNo);
 
         return new ResponseEntity<List<PartyDto>> (myParty, HttpStatus.OK);
     }
