@@ -24,7 +24,7 @@ public interface UserDao {
         String nickname 이용.
         get 요청으로 들어오는 만큼, 유저의 식별자를 굳이 URL 상에서 표시하기는 좀...
      */
-    public UserDto selectUser(String nickname);
+    public UserDto selectUser(int userNo);
 
     /*
         단일 유저 정보를 수정합니다.
@@ -63,7 +63,7 @@ public interface UserDao {
         유저의 소속 파티 정보 확인
         int userNo
      */
-    public List<PartyDto> selectUserParties(String nickname);
+    public List<PartyDto> selectUserParties(int userNo);
 
     /*
         유저의 정보 중복 여부 확인

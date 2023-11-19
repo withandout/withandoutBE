@@ -26,8 +26,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDto selectUser(String nickname) {
-        return userDao.selectUser(nickname);
+    public UserDto selectUser(int userNo) {
+        return userDao.selectUser(userNo);
     }
 
     @Override
@@ -59,8 +59,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<PartyDto> selectUserParties(String nickname) {
-        return userDao.selectUserParties(nickname);
+    public List<PartyDto> selectUserParties(int userNo) {
+        return userDao.selectUserParties(userNo);
     }
 
     @Override

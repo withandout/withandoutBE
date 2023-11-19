@@ -42,10 +42,10 @@
     </select>
 
     <!-- 유저 선택 -->
-    <select id="selectUser" parameterType="String" resultMap="UserDtoMap">
+    <select id="selectUser" parameterType="int" resultMap="UserDtoMap">
         SELECT `no_user`, `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
         FROM `wao_db`.`USERS` u
-        WHERE u.nickname = #{nickname}
+        WHERE u.`no_user` = #{userNo}
     </select>
 
     <!-- 유저 수정 -->
@@ -100,12 +100,12 @@
     </update>
 
     <!-- 유저가 속한 파티 찾아오기 3개 조인해야 할 듯.-->
-    <select id="selectUserParties" parameterType="String" resultMap="PartyDtoMap">
+    <select id="selectUserParties" parameterType="int" resultMap="PartyDtoMap">
         SELECT * FROM
         (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
         FROM `wao_db`.`Users_Parties` up LEFT JOIN `wao_db`.`Users` u
         ON up.`fk-users_parties-no_user` = u.`no_user`
-        WHERE u.`nickname` = #{nickname} AND is_accepted = 1) myparty LEFT JOIN `wao_db`.`Parties` p
+        WHERE u.`no_user` = #{userNo} AND is_accepted = 1) myparty LEFT JOIN `wao_db`.`Parties` p
         ON myparty.`no_party` = p.`no_party`;
     </select>
 

@@ -23,7 +23,7 @@ public interface UserService {
         단일 유저 정보를 조회합니다.
         int userNo 이용.
      */
-    public UserDto selectUser(String nickname);
+    public UserDto selectUser(int userNo);
 
     /*
         단일 유저 정보를 수정합니다.
@@ -63,7 +63,7 @@ public interface UserService {
         유저의 소속 파티 정보 확인
         int userNo
      */
-    public List<PartyDto> selectUserParties(String nickname);
+    public List<PartyDto> selectUserParties(int userNo);
 
     /*
         유저의 정보 중복 여부 확인
