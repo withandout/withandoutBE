@@ -25,7 +25,7 @@ import java.util.UUID;
 @CrossOrigin("*")
 public class UserRestController {
 
-    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandoutBE";
+    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandout/withandoutFE/withandoutFE/src/assets";
 
     @Autowired
     UserService userService;
@@ -36,14 +36,11 @@ public class UserRestController {
 
         int res = 0;
 
-        // 기본 이미지 경로.
-        String projectPath = WORKPATH + "/data/image/profile/user/";
-
         if (file == null) {
             String imgName = "default_user.png";
 
             userDto.setImgName(imgName);
-            userDto.setImgPath(projectPath + imgName);
+            userDto.setImgPath(WORKPATH + imgName);
             res = userService.signup(userDto);
         }
         else {
@@ -53,12 +50,12 @@ public class UserRestController {
             String imgName = uuid + "_" + file.getOriginalFilename();
 
             // 경로 지정.
-            File saveFile = new File(projectPath, imgName);
+            File saveFile = new File(WORKPATH, imgName);
 
             try {
                 file.transferTo(saveFile);
                 userDto.setImgName(imgName);
-                userDto.setImgPath(projectPath + imgName);
+                userDto.setImgPath(WORKPATH + imgName);
                 res = userService.signup(userDto);
             } catch (Exception e) {
                 return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
@@ -120,20 +117,18 @@ public class UserRestController {
     // 파일 업로드 시 RequestBody 사용 불가.
     @PostMapping("info/img")
     ResponseEntity<Void> modifyUserImg(@RequestPart("user") UserDto userDto, @RequestPart(required = false, name="image") MultipartFile file) {
-        String projectPath = WORKPATH + "/data/image/profile/user/";
-
         UUID uuid = UUID.randomUUID();
 
         // 파일 이미지 지정.
         String imgName = uuid + "_" + file.getOriginalFilename();
 
         // 경로 지정.
-        File saveFile = new File(projectPath, imgName);
+        File saveFile = new File(WORKPATH, imgName);
 
         try {
             file.transferTo(saveFile);
             userDto.setImgName(imgName);
-            userDto.setImgPath(projectPath + imgName);
+            userDto.setImgPath(WORKPATH + imgName);
             userService.modifyUserImg(userDto);
         } catch (Exception e) {
             return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
