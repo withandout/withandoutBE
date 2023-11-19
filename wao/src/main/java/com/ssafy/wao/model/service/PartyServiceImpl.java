@@ -79,4 +79,9 @@ public class PartyServiceImpl implements PartyService {
     public int modifyPartyImg(PartyDto partyDto) {
         return partyDao.modifyPartyImg(partyDto);
     }
+
+    @Override
+    public int validatePartyInfo(PartyDto partyDto) {
+        return (partyDao.validatePartyInfo(partyDto) == null) ? 0 : 1;
+    }
 }

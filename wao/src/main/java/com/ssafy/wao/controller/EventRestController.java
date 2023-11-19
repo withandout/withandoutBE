@@ -43,7 +43,7 @@ public class EventRestController {
         - 따라서 Auto Increment 된 값을 받아와야 합니다.
      */
     @PostMapping("new")
-    ResponseEntity<Void> createEvent(@RequestBody EventDto eventDto) {
+    ResponseEntity<Void> makeEvent(@RequestBody EventDto eventDto) {
         int res = eventService.createEvent(eventDto);
 
         if (res > 0)
