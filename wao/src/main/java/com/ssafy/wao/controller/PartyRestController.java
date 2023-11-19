@@ -24,7 +24,7 @@ import java.util.UUID;
 @CrossOrigin("*")
 public class PartyRestController {
 
-    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandout/withandoutFE/withandoutFE/src/assets";
+    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandout/withandoutFE/withandoutFE/src/assets/upload";
 
     @Autowired
     PartyService partyService;
