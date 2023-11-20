@@ -24,7 +24,7 @@ import java.util.UUID;
 @CrossOrigin("*")
 public class PartyRestController {
 
-    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandout/withandoutFE/withandoutFE/src/assets/upload";
+    private final String WORKPATH = "src/assets/upload/";
 
     @Autowired
     PartyService partyService;
@@ -38,7 +38,7 @@ public class PartyRestController {
         // file uploading
         if (file == null) {
 
-            String imgName = "default_party.png";
+            String imgName = "defaultParty.png";
 
             partyDto.setImgName(imgName);
             partyDto.setImgPath(WORKPATH + imgName);
@@ -145,9 +145,9 @@ public class PartyRestController {
         return new ResponseEntity<List<UserDto>>(partyMembers, HttpStatus.OK);
     }
 
-    @GetMapping("apply/{partyNo}")
-    ResponseEntity<?> selectApplicants(@PathVariable int partyNo) {
-        List<UserDto> partyApplicants = partyService.selectApplicants(partyNo);
+    @GetMapping("apply/{userNo}")
+    ResponseEntity<?> selectApplicants(@PathVariable int userNo) {
+        List<UserDto> partyApplicants = partyService.selectApplicants(userNo);
 
         if (partyApplicants == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
 

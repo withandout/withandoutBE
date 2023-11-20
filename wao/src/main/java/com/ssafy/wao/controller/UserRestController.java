@@ -25,7 +25,7 @@ import java.util.UUID;
 @CrossOrigin("*")
 public class UserRestController {
 
-    private final String WORKPATH = System.getProperty("user.home") + "/Desktop/withandout/withandoutFE/withandoutFE/src/assets/upload";
+    private final String WORKPATH = "src/assets/upload/";
 
     @Autowired
     UserService userService;
@@ -37,7 +37,7 @@ public class UserRestController {
         int res = 0;
 
         if (file == null) {
-            String imgName = "default_user.png";
+            String imgName = "defaultUser.png";
 
             userDto.setImgName(imgName);
             userDto.setImgPath(WORKPATH + imgName);

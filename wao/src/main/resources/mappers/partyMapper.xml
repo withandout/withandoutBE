@@ -24,6 +24,8 @@
         <result property="isAuthorized" column="is_authorized"/>
         <result property="imgPath" column="img_path"/>
         <result property="imgName" column="img_name"/>
+        <result property="partyName" column="partyName"/>
+        <result property="partyNo" column="no_party"/>
     </resultMap>
     <resultMap id="EventDtoMap" type="EventDto">
         <id property="eventNo" column="no_event"/>
@@ -85,13 +87,18 @@
 
     <!-- 파티 멤버 신청자 전체 조회 -->
     <select id="selectApplicants" parameterType="int" resultMap="UserDtoMap">
-        SELECT u.`no_user`, `user_id`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`
+        SELECT  `no_user`, `nickname`, sq2.`content`, `age`, `gender`, `img_path`, `name` as partyName, `no_party`
         FROM
-        (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`
-        FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
-        ON up.`fk-users_parties-no_party` = p.`no_party`
-        WHERE p.`no_party` = #{partyNo} AND `is_accepted` = 0) members LEFT JOIN `wao_db`.`Users` u
-        ON members.`no_user` = u.`no_user`
+        (SELECT *
+        FROM
+        (SELECT `no_party`, `name`
+        FROM `wao_db`.`Parties` p
+        LEFT JOIN `wao_db`.`Users` u
+        ON u.`no_user` = p.`fk-users-parties-no_user`
+        WHERE u.`no_user` = #{userNo}) sq LEFT JOIN `wao_db`.`USERS_Parties` up
+        ON sq.`no_party` = up.`fk-users_parties-no_party`
+        WHERE up.`is_accepted` = 0) sq2 LEFT JOIN `wao_db`.`Users` u2
+        ON u2.`no_user` = sq2.`fk-users_parties-no_user`;
     </select>
 
     <!-- 파티 리더 조회 -->

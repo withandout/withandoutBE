@@ -14,6 +14,8 @@
         <result property="isAuthorized" column="is_authorized"/>
         <result property="imgPath" column="img_path"/>
         <result property="imgName" column="img_name"/>
+        <result property="partyName" column="partyName"/>
+        <result property="partyNo" column="no_party"/>
     </resultMap>
     <resultMap id="PartyDtoMap" type="PartyDto">
         <id property="partyNo" column="no_party" />

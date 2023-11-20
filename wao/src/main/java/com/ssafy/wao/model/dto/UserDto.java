@@ -14,6 +14,8 @@ public class UserDto {
     private String content = "";
     private String imgPath = "";
     private String imgName = "";
+    private String partyName = "";
+    private int partyNo = -1;
 
     public String getContent() { return content; }
 
@@ -99,6 +101,22 @@ public class UserDto {
         this.imgName = imgName;
     }
 
+    public String getPartyName() {
+        return partyName;
+    }
+
+    public void setPartyName(String partyName) {
+        this.partyName = partyName;
+    }
+
+    public int getPartyNo() {
+        return partyNo;
+    }
+
+    public void setPartyNo(int partyNo) {
+        this.partyNo = partyNo;
+    }
+
     @Override
     public String toString() {
         return "UserDto{" +
@@ -113,6 +131,8 @@ public class UserDto {
                 ", content='" + content + '\'' +
                 ", imgPath='" + imgPath + '\'' +
                 ", imgName='" + imgName + '\'' +
+                ", partyName='" + partyName + '\'' +
+                ", partyNo=" + partyNo +
                 '}';
     }
 }
