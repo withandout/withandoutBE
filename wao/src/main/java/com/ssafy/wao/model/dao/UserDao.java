@@ -70,4 +70,6 @@ public interface UserDao {
         UserDto userDto
      */
     public UserDto validateUserInfo(UserDto userDto);
+
+    public int isAuthorized(int userNo);
 }

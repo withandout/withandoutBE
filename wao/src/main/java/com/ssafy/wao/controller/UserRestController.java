@@ -175,4 +175,12 @@ public class UserRestController {
         if (res > 0) return new ResponseEntity<Void> (HttpStatus.NOT_ACCEPTABLE);
         return new ResponseEntity<Void> (HttpStatus.OK);
     }
+
+    @GetMapping("auth/{userNo}")
+    ResponseEntity<Integer> isAuthorized(@PathVariable int userNo) {
+
+        Integer res = userService.isAuthorized(userNo);
+
+        return new ResponseEntity<Integer> (res, HttpStatus.OK);
+    }
 }
