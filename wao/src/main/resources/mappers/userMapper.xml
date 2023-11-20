@@ -122,4 +122,10 @@
         SELECT * FROM `wao_db`.`Users` u
         WHERE u.`user_id` = #{userId} OR u.`nickname` = #{nickname}
     </select>
+
+    <select id="isAuthorized" parameterType="int">
+        SELECT is_authorized as isAuthorized
+        FROM `wao_db`.`Users` u
+        WHERE u.`no_user` = #{userNo}
+    </select>
 </mapper>

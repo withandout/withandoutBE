@@ -67,4 +67,9 @@ public class UserServiceImpl implements UserService {
     public int validateUserInfo(UserDto userDto) {
         return (userDao.validateUserInfo(userDto) == null ? 0 : 1);
     }
+
+    @Override
+    public int isAuthorized(int userNo) {
+        return userDao.isAuthorized(userNo);
+    };
 }

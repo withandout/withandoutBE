@@ -70,4 +70,6 @@ public interface UserService {
         UserDto userDto
      */
     public int validateUserInfo(UserDto userDto);
+
+    public int isAuthorized(int userNo);
 }
