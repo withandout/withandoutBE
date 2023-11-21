@@ -1,6 +1,5 @@
 package com.ssafy.wao.model.dto;
 
-import java.sql.Date;
 import java.sql.Timestamp;
 
 public class PartyDto {
@@ -15,8 +14,8 @@ public class PartyDto {
     private int sizeCurrent;
     private int userNo;
     private int isAccepted;
-    private Date invitedDate;
-    private Date acceptedDate;
+    private Timestamp invitedDate;
+    private Timestamp acceptedDate;
 
     public int getPartyNo() {
         return partyNo;
@@ -106,19 +105,19 @@ public class PartyDto {
         this.isAccepted = isAccepted;
     }
 
-    public Date getInvitedDate() {
+    public Timestamp getInvitedDate() {
         return invitedDate;
     }
 
-    public void setInvitedDate(Date invitedDate) {
+    public void setInvitedDate(Timestamp invitedDate) {
         this.invitedDate = invitedDate;
     }
 
-    public Date getAcceptedDate() {
+    public Timestamp getAcceptedDate() {
         return acceptedDate;
     }
 
-    public void setAcceptedDate(Date acceptedDate) {
+    public void setAcceptedDate(Timestamp acceptedDate) {
         this.acceptedDate = acceptedDate;
     }
 

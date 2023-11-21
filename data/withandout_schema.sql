@@ -196,9 +196,9 @@ VALUES
 
 INSERT INTO `wao_db`.`parties` (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`)
 VALUES
-('그린빌 러너즈', 'running', '강남구', '금요일마다 크대대 회식합니다 2차 참여 필수!', '', '', 6, 4),
-('역삼동 식핑거즈', 'running', '강남구', '헤일리의 아픈 손가락들', '', '', 6, 8),
-('저녁뭐먹?', 'running', '강남구', '메뉴 잘 정하는 사함 환영', '', '', 6, 4);
+('그린빌 러너즈', '러닝', '강남구', '금요일마다 크대대 회식합니다 2차 참여 필수!', '', '', 6, 4),
+('역삼동 식핑거즈', '러닝', '강남구', '헤일리의 아픈 손가락들', '', '', 6, 8),
+('저녁뭐먹?', '러닝', '강남구', '메뉴 잘 정하는 사람 환영', '', '', 6, 4);
 
 
 INSERT INTO `wao_db`.`users_parties`
@@ -221,27 +221,25 @@ VALUES
 
 INSERT INTO `wao_db`.`Events` (`start_time`, `end_time`, `content`, `fk-parties-events-no_party`)
 VALUES
-('2023-11-17 09:00:00.007', '2023-12-31 09:00:00.007', '스케쥴1', 1),
-('2023-11-19 09:00:00.007', '2023-12-31 09:00:00.007', '스케쥴2', 1),
-('2023-11-21 09:00:00.007', '2023-01-05 09:00:00.007', '스케쥴3', 1),
-('2023-11-23 09:00:00.007', '2023-01-05 09:00:00.007', '스케쥴4', 1),
-('2023-12-27 09:00:00.007', '2022-12-21 09:00:00.007', '스케쥴5', 1),
-('2023-12-29 09:00:00.007', '2024-12-31 09:00:00.007', '스케쥴6', 1);
-
-
+('2023-11-24 18:00:00.000', '2023-11-24 23:00:00.000', '역삼역 하몽하몽', 1),
+('2023-11-25 07:00:00.000', '2023-11-25 08:00:00.000', '주말 아침 러닝', 2),
+('2023-11-26 16:00:00.000', '2023-11-26 20:00:00.000', '하프 마라톤 연습', 1),
+('2023-11-24 22:00:00.000', '2023-11-25 01:00:00.000', '강남역 알부자', 1),
+('2023-11-27 09:00:00.000', '2023-11-27 11:00:00.000', '온라인수업 기념 산책', 1),
+('2023-11-24 18:00:00.000', '2023-11-24 23:00:00.000', '역삼역 하몽하몽', 2),
+('2023-11-25 07:00:00.000', '2023-11-25 11:00:00.000', '탄천 따라 모닝 러닝', 2),
+('2023-11-27 12:00:00.000', '2023-11-27 17:00:00.000', '조용환의 이 맛집은 처음이지', 3),
+('2023-11-24 22:00:00.000', '2023-11-25 01:00:00.000', '관악산 백슉먹짜했짜나', 3);
 
 INSERT INTO `Users_Events` (`fk-users_events-no_user`, `fk-users_events-no_event`)
 VALUES
-(1, 1),
-(1, 2),
-(10, 2),
-(2, 2), 
-(3, 2), 
-(4, 2),
-(2, 3),  
-(1, 4),
-(1, 5),
-(1, 6);
+(4, 1),
+(4, 3),
+(4, 5),
+(5, 1),
+(5, 4),
+(5, 5),
+(6, 1);
 
 
 commit ;
@@ -402,11 +400,7 @@ ON sq.`no_party` = up.`fk-users_parties-no_party`
 WHERE up.`is_accepted` = 0;
 
 
-SELECT *, COUNT(*)
-FROM `wao_db`.`Parties` p 
-LEFT JOIN `wao_db`.`Users` u 
-ON u.`no_user` = p.`fk-users-parties-no_user`
-WHERE u.`no_user` = 4;
+
 
 
 
@@ -417,6 +411,12 @@ SELECT * FROM
         ON cnts.`no_party` = p.`no_party`
         WHERE cnts.`size_current` < p.`size_limit`;
 
-SELECT `fk-users_parties-no_party` as no_party, count(*) as cnt
-        FROM `users_parties`
-        GROUP BY `fk-users_parties-no_party`);
+
+SELECT `no_event`, `start_time`, `end_time`, `content`, `fk-parties-events-no_party`, COUNT(*) as `no_participant`,
+        CASE WHEN FIND_IN_SET(4, GROUP_CONCAT(ue.`fk-users_events-no_user`)) > 0 THEN '1' ELSE '0' END AS is_applied
+        FROM (
+        SELECT * FROM `wao_db`.`Events` e
+        WHERE `fk-parties-events-no_party` = 1
+        AND e.`start_time` > NOW() AND e.`start_time` < date_add(NOW(), INTERVAL 7 DAY)) pe LEFT JOIN `wao_db`.`Users_Events` ue
+        ON pe.`no_event` = ue.`fk-users_events-no_event`
+        GROUP BY `no_event`;

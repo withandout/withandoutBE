@@ -1,12 +1,12 @@
 package com.ssafy.wao.model.dto;
 
 // 변환 필요할 수도 ?
-import java.sql.Date;
+import java.sql.Timestamp;
 
 public class EventDto {
     private int eventNo;
-    private Date sttTime;
-    private Date endTime;
+    private Timestamp sttTime;
+    private Timestamp endTime;
     private int partyNo;
     private int userNo;
     private String content;
@@ -21,19 +21,19 @@ public class EventDto {
         this.eventNo = eventNo;
     }
 
-    public Date getSttTime() {
+    public Timestamp getSttTime() {
         return sttTime;
     }
 
-    public void setSttTime(Date sttTime) {
+    public void setSttTime(Timestamp sttTime) {
         this.sttTime = sttTime;
     }
 
-    public Date getEndTime() {
+    public Timestamp getEndTime() {
         return endTime;
     }
 
-    public void setEndTime(Date endTime) {
+    public void setEndTime(Timestamp endTime) {
         this.endTime = endTime;
     }
 

@@ -62,7 +62,7 @@ public class EventRestController {
         int res = eventService.applyEvent(eventDto);
 
         if (res > 0)
-            return new ResponseEntity<Void>(HttpStatus.CREATED);
+            return new ResponseEntity<Void>(HttpStatus.OK);
         return new ResponseEntity<Void>(HttpStatus.NOT_ACCEPTABLE);
     }
 

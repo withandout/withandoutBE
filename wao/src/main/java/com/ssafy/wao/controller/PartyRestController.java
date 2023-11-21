@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.sql.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.UUID;
 
@@ -83,8 +84,10 @@ public class PartyRestController {
                 insertMember.setIsAccepted(1);
 
                 Date sqlDate = new Date(System.currentTimeMillis());
-                insertMember.setInvitedDate(sqlDate);
-                insertMember.setAcceptedDate(sqlDate);
+                Timestamp timeStamp = new java.sql.Timestamp(sqlDate.getTime());
+
+                insertMember.setInvitedDate(timeStamp);
+                insertMember.setAcceptedDate(timeStamp);
 
                 res = 0;
 
@@ -174,7 +177,7 @@ public class PartyRestController {
     @PostMapping("event")
     ResponseEntity<?> selectAllEvents(@RequestBody PartyDto partyDto) {
         // 현재 시간 주입.
-        partyDto.setInvitedDate(new Date(System.currentTimeMillis()));
+        partyDto.setInvitedDate(new java.sql.Timestamp((new Date(System.currentTimeMillis())).getTime()));
 
         List<EventDto> partyEvents = partyService.selectAllEvents(partyDto);
 
