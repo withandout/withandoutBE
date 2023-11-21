@@ -12,6 +12,7 @@ public class PartyDto {
     private String imgPath;
     private String imgName;
     private int sizeLimit;
+    private int sizeCurrent;
     private int userNo;
     private int isAccepted;
     private Date invitedDate;
@@ -81,6 +82,14 @@ public class PartyDto {
         this.sizeLimit = sizeLimit;
     }
 
+    public int getSizeCurrent() {
+        return sizeCurrent;
+    }
+
+    public void setSizeCurrent(int sizeCurrent) {
+        this.sizeCurrent = sizeCurrent;
+    }
+
     public int getUserNo() {
         return userNo;
     }
@@ -124,6 +133,7 @@ public class PartyDto {
                 ", imgPath='" + imgPath + '\'' +
                 ", imgName='" + imgName + '\'' +
                 ", sizeLimit=" + sizeLimit +
+                ", sizeCurrent=" + sizeCurrent +
                 ", userNo=" + userNo +
                 ", isAccepted=" + isAccepted +
                 ", invitedDate=" + invitedDate +

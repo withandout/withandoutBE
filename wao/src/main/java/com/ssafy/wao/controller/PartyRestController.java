@@ -196,6 +196,9 @@ public class PartyRestController {
     @PutMapping("apply")
     ResponseEntity<Void> acceptApply(@RequestBody PartyDto partyDto) {
         partyDto.setIsAccepted(1);
+
+        System.out.println("accept" + partyDto);
+
         int res = partyService.acceptApply(partyDto);
 
         if (res > 0) return new ResponseEntity<Void>(HttpStatus.OK);
@@ -206,6 +209,8 @@ public class PartyRestController {
     @DeleteMapping("apply")
     ResponseEntity<?> declineApplication(@RequestBody PartyDto partyDto) {
         int res = partyService.declineApply(partyDto);
+
+        System.out.println("decline" + partyDto);
 
         if (res > 0) return new ResponseEntity<Void>(HttpStatus.OK);
 

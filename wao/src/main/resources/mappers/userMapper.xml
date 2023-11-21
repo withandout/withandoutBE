@@ -25,6 +25,7 @@
         <result property="imgPath" column="img_path"/>
         <result property="imgName" column="img_name"/>
         <result property="sizeLimit" column="size_limit"/>
+        <result property="sizeCurrent" column="size_current"/>
         <result property="userNo" column="fk-users-parties-no_user"/>
     </resultMap>
 
