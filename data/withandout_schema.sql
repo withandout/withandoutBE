@@ -182,16 +182,16 @@ USE `wao_db` ;
 INSERT INTO `wao_db`.`users`
 (`user_id`, `password`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`)
 VALUES
-('ssafy1', @PW, '김영섭', '관악구', 'M', 28, '왈왈 크르릉 왈왈', 1, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
-('ssafy2', @PW, '김예림', '강남구', 'W', 27, '총무 겸 큰손 겸 왕자님 겸 스프링 GOD', 1, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
-('ssafy3', @PW, '이승헌', '강남구', 'M', 27, '2017년 제주 해녀 선정 올해의 과메기남', 0, CONCAT(@WORKPATH, 'seungheon.png'), 'seungheon.png'),
-('ssafy4', @PW, '조현수', '강남구', 'M', 29, '역삼동 음식물 수거 트럭 탈취범', 0, CONCAT(@WORKPATH, 'hyunsoo.png'), 'hyunsoo.png'),
-('ssafy5', @PW, '김병현', '강남구', 'M', 29, '역삼동 팬티도둑', 0, CONCAT(@WORKPATH, 'byeonghyeon.png'), 'byeonghyeon.png'),
-('ssafy6', @PW, '김종인', '강남구', 'M', 29, '역삼동 발가락', 0, CONCAT(@WORKPATH, 'jongin.png'), 'jongin.png'),
-('ssafy7', @PW,  '석지명', '강남구', 'M', 29, 'IM 이하 연락 금지', 0, CONCAT(@WORKPATH, 'jimyeong.png'), 'jimyeong.png'),
-('ssafy8', @PW,  '유승호', '강남구', 'M', 25, '왕십리 곱창 훌라후프남', 0, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
-('ssafy9', @PW, '김남준', '강남구', 'M', 28, '신림역 나체 털보산적', 0, CONCAT(@WORKPATH, 'namjoon.png'), 'namjoon.png'),
-('ssafy10', @PW, '김태운', '동작구', 'M', 25, '동작구 거부기', 0, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png');
+('ssafy1', @PW, '김영섭', '관악구', '남성', 28, '왈왈 크르릉 왈왈', 1, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
+('ssafy2', @PW, '김예림', '강남구', '여성', 27, '총무 겸 큰손 겸 왕자님 겸 스프링 GOD', 1, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
+('ssafy3', @PW, '이승헌', '강남구', '남성', 27, '2017년 제주 해녀 선정 올해의 과메기남', 0, CONCAT(@WORKPATH, 'seungheon.png'), 'seungheon.png'),
+('ssafy4', @PW, '조현수', '강남구', '남성', 29, '역삼동 음식물 수거 트럭 탈취범', 0, CONCAT(@WORKPATH, 'hyunsoo.png'), 'hyunsoo.png'),
+('ssafy5', @PW, '김병현', '강남구', '남성', 29, '역삼동 팬티도둑', 0, CONCAT(@WORKPATH, 'byeonghyeon.png'), 'byeonghyeon.png'),
+('ssafy6', @PW, '김종인', '강남구', '남성', 29, '역삼동 발가락', 0, CONCAT(@WORKPATH, 'jongin.png'), 'jongin.png'),
+('ssafy7', @PW,  '석지명', '강남구', '남성', 29, 'IM 이하 연락 금지', 0, CONCAT(@WORKPATH, 'jimyeong.png'), 'jimyeong.png'),
+('ssafy8', @PW,  '유승호', '강남구', '남성', 25, '왕십리 곱창 훌라후프남', 0, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
+('ssafy9', @PW, '김남준', '강남구', '남성', 28, '신림역 나체 털보산적', 0, CONCAT(@WORKPATH, 'namjoon.png'), 'namjoon.png'),
+('ssafy10', @PW, '김태운', '동작구', '남성', 25, '동작구 거부기', 0, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png');
 
 
 INSERT INTO `wao_db`.`parties` (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`)
@@ -375,7 +375,7 @@ ON sq.`no_party` = up.`fk-users_parties-no_party`
 WHERE up.`is_accepted` = 0;
 
 
-SELECT *
+SELECT  `no_user`, `nickname`, sq2.`content`, `age`, `gender`, `img_path`, `name` as partyName, `no_party`
 FROM
 (SELECT *
 FROM 
@@ -390,6 +390,17 @@ ON u2.`no_user` = sq2.`fk-users_parties-no_user`;
 
 
 -- `no_user`, `nickname`, `content`, `age`, `gender`, `img_path`, `name` as partyName, `no_party`
+
+SELECT *
+FROM 
+(SELECT `no_party`, `name`
+FROM `wao_db`.`Parties` p 
+LEFT JOIN `wao_db`.`Users` u 
+ON u.`no_user` = p.`fk-users-parties-no_user`
+WHERE u.`no_user` = 4) sq LEFT JOIN `wao_db`.`USERS_Parties` up
+ON sq.`no_party` = up.`fk-users_parties-no_party`
+WHERE up.`is_accepted` = 0;
+
 
 SELECT *
 FROM `wao_db`.`Parties` p 
