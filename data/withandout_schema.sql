@@ -198,7 +198,7 @@ INSERT INTO `wao_db`.`parties` (`name`, `sports`, `region`, `content`, `img_path
 VALUES
 ('그린빌 러너즈', 'running', '강남구', '금요일마다 크대대 회식합니다 2차 참여 필수!', '', '', 6, 4),
 ('역삼동 식핑거즈', 'running', '강남구', '헤일리의 아픈 손가락들', '', '', 6, 8),
-('오늘저녁뭐먹음?', 'running', '강남구', '저녁메뉴 잘 정하는 사함 환영', '', '', 6, 4);
+('저녁뭐먹?', 'running', '강남구', '메뉴 잘 정하는 사함 환영', '', '', 6, 4);
 
 
 INSERT INTO `wao_db`.`users_parties`
@@ -402,8 +402,21 @@ ON sq.`no_party` = up.`fk-users_parties-no_party`
 WHERE up.`is_accepted` = 0;
 
 
-SELECT *
+SELECT *, COUNT(*)
 FROM `wao_db`.`Parties` p 
 LEFT JOIN `wao_db`.`Users` u 
 ON u.`no_user` = p.`fk-users-parties-no_user`
 WHERE u.`no_user` = 4;
+
+
+
+SELECT * FROM
+        (SELECT `fk-users_parties-no_party` as no_party, count(*) as `size_current`
+        FROM `users_parties`
+        GROUP BY `fk-users_parties-no_party`) cnts LEFT JOIN `wao_db`.`parties` p
+        ON cnts.`no_party` = p.`no_party`
+        WHERE cnts.`size_current` < p.`size_limit`;
+
+SELECT `fk-users_parties-no_party` as no_party, count(*) as cnt
+        FROM `users_parties`
+        GROUP BY `fk-users_parties-no_party`);
