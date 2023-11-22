@@ -192,4 +192,20 @@ public class UserRestController {
         if (list == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<List<EventDto>>(list, HttpStatus.OK);
     }
+
+    /*
+        현재 신청 가능한 파티 조회
+        params : int userNo, String region
+        result : List<PartyDto>
+     */
+    @PostMapping("info/available")
+    ResponseEntity<?> selectAvailableParty(@RequestBody UserDto userDto) {
+        System.out.println(userDto);
+        List<PartyDto> list = userService.selectAvailableParty(userDto);
+
+        if (list == null)
+            return new ResponseEntity<Void> (HttpStatus.NOT_FOUND);
+
+        return new ResponseEntity<List<PartyDto>> (list, HttpStatus.OK);
+    };
 }

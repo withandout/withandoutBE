@@ -190,6 +190,7 @@ public class PartyRestController {
     @PostMapping("apply")
     ResponseEntity<Void> applyToParty(@RequestBody PartyDto partyDto) {
         partyDto.setIsAccepted(0);
+        System.out.println(partyDto);
         int res = partyService.insertPartyMember(partyDto);
 
         if (res > 0) return new ResponseEntity<Void>(HttpStatus.OK);

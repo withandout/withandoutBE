@@ -150,4 +150,30 @@
         WHERE ue.`fk-users_events-no_user` = #{userNo}) uee LEFT JOIN `wao_db`.`Events` e
         ON uee.`fk-users_events-no_event` = e.`no_event`;
     </select>
+
+    <!--  신청 가능한 파티 조회  -->
+    <select id="selectAvailableParty" parameterType="UserDto" resultMap="PartyDtoMap">
+        SELECT *
+        FROM
+        (
+        SELECT `no_party`, `name`, `sports`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`
+        FROM
+        (SELECT *
+        FROM `wao_db`.`Parties`
+        WHERE `region` = #{region}) pt
+        LEFT JOIN
+        (SELECT `is_accepted`, `fk-users_parties-no_party`
+        FROM `wao_db`.`USERS_PARTIES`
+        WHERE `fk-users_parties-no_user` = #{userNo}) mypt
+        ON pt.`no_party` = mypt.`fk-users_parties-no_party`
+        WHERE `is_accepted` IS NULL
+        ) og_table LEFT JOIN
+        (
+        SELECT `fk-users_parties-no_party` as size_table_no_party, count(*) as `size_current`
+        FROM `users_parties`
+        GROUP BY `fk-users_parties-no_party`
+        ) size_table
+        ON size_table.`size_table_no_party` = og_table.`no_party`
+        WHERE size_table.`size_current` &lt; og_table.`size_limit`;
+    </select>
 </mapper>

@@ -78,4 +78,9 @@ public class UserServiceImpl implements UserService {
     public List<EventDto> selectAllEvents(int userNo) {
         return userDao.selectAllEvents(userNo);
     }
+
+    @Override
+    public List<PartyDto> selectAvailableParty(UserDto userDto) {
+        return userDao.selectAvailableParty(userDto);
+    }
 }

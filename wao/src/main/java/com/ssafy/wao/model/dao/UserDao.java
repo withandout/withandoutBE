@@ -80,4 +80,11 @@ public interface UserDao {
         params: int userNo
      */
     public List<EventDto> selectAllEvents(int userNo);
+
+    /*
+        현재 신청 가능한 파티 조회
+        params : int userNo, String region
+        result : List<PartyDto>
+     */
+    public List<PartyDto> selectAvailableParty(UserDto userDto);
 }
