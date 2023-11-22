@@ -28,6 +28,15 @@
         <result property="sizeCurrent" column="size_current"/>
         <result property="userNo" column="fk-users-parties-no_user"/>
     </resultMap>
+    <resultMap id="EventDtoMap" type="EventDto">
+        <id property="eventNo" column="no_event" />
+        <result property="userNo" column="no_user"/>
+        <result property="partyNo" column="no_party"/>
+        <result property="content" column="content"/>
+        <result property="isApplied" column="is_applied"/>
+        <result property="sttTime" column="start_time"/>
+        <result property="endTime" column="end_time"/>
+    </resultMap>
 
     <!-- 회원가입 -->
     <insert id="signup" parameterType="UserDto">
@@ -39,7 +48,7 @@
 
     <!-- 로그인 -->
     <select id="login" parameterType="UserDto" resultMap="UserDtoMap">
-        SELECT `no_user`, `user_id`, `nickname`, `region`
+        SELECT `no_user`, `user_id`, `nickname`, `region`, `age`, `gender`
         FROM `wao_db`.`USERS` u
         WHERE u.user_id = #{userId} AND u.password = #{password}
     </select>
@@ -130,5 +139,15 @@
         SELECT is_authorized as isAuthorized
         FROM `wao_db`.`Users` u
         WHERE u.`no_user` = #{userNo}
+    </select>
+
+    <!-- 유저의 모든 일정 반환 -->
+    <select id="selectAllEvents" parameterType="int" resultMap="EventDtoMap">
+        SELECT `fk-users_events-no_user` as `no_user`, `fk-parties-events-no_party` as `no_party`, `no_event`, `start_time`, `end_time`, `content`
+        FROM
+        (SELECT *
+        FROM `wao_db`.`Users_Events` ue
+        WHERE ue.`fk-users_events-no_user` = #{userNo}) uee LEFT JOIN `wao_db`.`Events` e
+        ON uee.`fk-users_events-no_event` = e.`no_event`;
     </select>
 </mapper>

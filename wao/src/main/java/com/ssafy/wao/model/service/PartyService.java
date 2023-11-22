@@ -1,5 +1,6 @@
 package com.ssafy.wao.model.service;
 
+import com.ssafy.wao.model.dto.ArticleDto;
 import com.ssafy.wao.model.dto.EventDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
@@ -100,4 +101,11 @@ public interface PartyService {
     result : int (존재 여부)
     */
     public int validatePartyInfo(PartyDto partyDto);
+
+    /*
+        파티의 갤러리 사진 조회.
+        params : int partyNo
+        result : List<ArticleDto>
+     */
+    public List<ArticleDto> selectPartyArticle(int partyNo);
 }

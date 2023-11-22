@@ -31,7 +31,7 @@
         <result property="userNo" column="no_user"/>
         <result property="partyNo" column="no_party"/>
         <result property="content" column="content"/>
-        <result property="is_applied" column="isApplied"/>
+        <result property="isApplied" column="is_applied"/>
         <result property="sttTime" column="start_time"/>
         <result property="endTime" column="end_time"/>
     </resultMap>

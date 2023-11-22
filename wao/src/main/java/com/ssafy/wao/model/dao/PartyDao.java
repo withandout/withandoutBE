@@ -1,5 +1,6 @@
 package com.ssafy.wao.model.dao;
 
+import com.ssafy.wao.model.dto.ArticleDto;
 import com.ssafy.wao.model.dto.EventDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
@@ -100,4 +101,11 @@ public interface PartyDao {
         result : PartyDto (중복 레코드)
      */
     public PartyDto validatePartyInfo(PartyDto partyDto);
+
+    /*
+        파티의 갤러리 사진 조회.
+        params : int partyNo
+        result : List<ArticleDto>
+     */
+    public List<ArticleDto> selectPartyArticle(int partyNo);
 }

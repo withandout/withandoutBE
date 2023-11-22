@@ -2,6 +2,7 @@ package com.ssafy.wao.controller;
 
 
 import com.ssafy.wao.model.dao.UserDao;
+import com.ssafy.wao.model.dto.EventDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
 import com.ssafy.wao.model.service.UserService;
@@ -182,5 +183,13 @@ public class UserRestController {
         Integer res = userService.isAuthorized(userNo);
 
         return new ResponseEntity<Integer> (res, HttpStatus.OK);
+    }
+
+    @GetMapping("event/{userNo}")
+    ResponseEntity<?> selectAllEvents(@PathVariable int userNo) {
+        List<EventDto> list = userService.selectAllEvents(userNo);
+
+        if (list == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<List<EventDto>>(list, HttpStatus.OK);
     }
 }

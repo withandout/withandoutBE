@@ -1,6 +1,7 @@
 package com.ssafy.wao.controller;
 
 
+import com.ssafy.wao.model.dto.ArticleDto;
 import com.ssafy.wao.model.dto.EventDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
@@ -241,4 +242,16 @@ public class PartyRestController {
 
         return new ResponseEntity<Void>(HttpStatus.OK);
     }
+
+    /*
+        파티의 갤러리 사진 조회.
+        params : int partyNo
+        result : List<ArticleDto>
+     */
+    @GetMapping("article/{partyNo}")
+    ResponseEntity<?> selectPartyArticle(@PathVariable int partyNo) {
+        List<ArticleDto> list = partyService.selectPartyArticle(partyNo);
+        if (list == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<List<ArticleDto>>(list, HttpStatus.OK);
+    };
 }

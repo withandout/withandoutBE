@@ -1,6 +1,7 @@
 package com.ssafy.wao.model.service;
 
 import com.ssafy.wao.model.dao.UserDao;
+import com.ssafy.wao.model.dto.EventDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,5 +72,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public int isAuthorized(int userNo) {
         return userDao.isAuthorized(userNo);
-    };
+    }
+
+    @Override
+    public List<EventDto> selectAllEvents(int userNo) {
+        return userDao.selectAllEvents(userNo);
+    }
 }

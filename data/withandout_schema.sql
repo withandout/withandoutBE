@@ -164,7 +164,8 @@ CREATE TABLE IF NOT EXISTS `wao_db`.`Articles` (
 ENGINE = InnoDB;
 
 
-SET @WORKPATH = 'src/assets/upload/';
+SET @WORKPATH = '/src/assets/upload/';
+SET @GALLERYPATH = '/src/assets/img/gallery/';
 SET @PW = 'aaaaaaaa';
 
 SELECT * FROM `users`;
@@ -178,7 +179,6 @@ commit ;
 
 USE `wao_db` ;
 
-
 INSERT INTO `wao_db`.`users`
 (`user_id`, `password`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`)
 VALUES
@@ -191,14 +191,16 @@ VALUES
 ('ssafy7', @PW,  '석지명', '강남구', '남성', 29, 'IM 이하 연락 금지', 0, CONCAT(@WORKPATH, 'jimyeong.png'), 'jimyeong.png'),
 ('ssafy8', @PW,  '유승호', '강남구', '남성', 25, '왕십리 곱창 훌라후프남', 0, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
 ('ssafy9', @PW, '김남준', '강남구', '남성', 28, '신림역 나체 털보산적', 0, CONCAT(@WORKPATH, 'namjoon.png'), 'namjoon.png'),
-('ssafy10', @PW, '김태운', '동작구', '남성', 25, '동작구 거부기', 0, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png');
+('ssafy10', @PW, '김태운', '동작구', '남성', 25, '동작구 거부기', 0, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
+('ssafy11', @PW, '조용환', '강남구', '남성', 29, '아빠 안잔다', 0, CONCAT(@WORKPATH, 'yonghwan.png'), 'yonghwan.png'),
+('ssafy12', @PW, '황인승', '강남구', '남성', 28, '역삼동 2019년생 김지환군의 개나리공원 미끄럼틀 경쟁자', 0, CONCAT(@WORKPATH, 'inseung.png'), 'inseung.png');
 
 
 INSERT INTO `wao_db`.`parties` (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`)
 VALUES
 ('그린빌 러너즈', '러닝', '강남구', '금요일마다 크대대 회식합니다 2차 참여 필수!', '', '', 6, 4),
 ('역삼동 식핑거즈', '러닝', '강남구', '헤일리의 아픈 손가락들', '', '', 6, 8),
-('저녁뭐먹?', '러닝', '강남구', '메뉴 잘 정하는 사람 환영', '', '', 6, 4);
+('오저뭐먹?', '러닝', '강남구', '메뉴 잘 정하는 사람 환영', '', '', 6, 4);
 
 
 INSERT INTO `wao_db`.`users_parties`
@@ -214,9 +216,10 @@ VALUES
 (2, 8 , 1, '', '2023-07-27 09:00:00.007', '2019-08-21 09:00:00.007'),
 (2, 9 , 0, '', '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
 (3, 4 , 1, '', '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
-(3, 5 , 1, '', '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
-(3, 6 , 1, '', '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
 (3, 1 , 1, '', '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
+(3, 10 , 1, '', '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
+(3, 11 , 1, '', '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
+(3, 12 , 1, '', '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007'),
 (3, 2 , 0, '물에빠진고기,해산물,기름진거,단거빼고잘먹어요', '2023-07-28 09:00:00.007', '2019-08-22 09:00:00.007');
 
 INSERT INTO `wao_db`.`Events` (`start_time`, `end_time`, `content`, `fk-parties-events-no_party`)
@@ -228,8 +231,8 @@ VALUES
 ('2023-11-27 09:00:00.000', '2023-11-27 11:00:00.000', '온라인수업 기념 산책', 1),
 ('2023-11-24 18:00:00.000', '2023-11-24 23:00:00.000', '역삼역 하몽하몽', 2),
 ('2023-11-25 07:00:00.000', '2023-11-25 11:00:00.000', '탄천 따라 모닝 러닝', 2),
-('2023-11-27 12:00:00.000', '2023-11-27 17:00:00.000', '조용환의 이 맛집은 처음이지', 3),
-('2023-11-24 22:00:00.000', '2023-11-25 01:00:00.000', '관악산 백슉먹짜했짜나', 3);
+('2023-11-27 12:00:00.000', '2023-11-27 17:00:00.000', '조용환의 맛따라멋따라', 3),
+('2023-11-24 13:00:00.000', '2023-11-24 17:00:00.000', '관악산 백슉먹짜했짜나', 3);
 
 INSERT INTO `Users_Events` (`fk-users_events-no_user`, `fk-users_events-no_event`)
 VALUES
@@ -241,6 +244,36 @@ VALUES
 (5, 5),
 (6, 1);
 
+INSERT INTO `wao_db`.`Articles`
+(`fk-users-articles-no_user`, `fk-parties-articles-no_party`,
+`content`, `reg_date`, `img_path`, `img_name`)
+VALUES
+(4, 1, '', '2023-11-10 01:00:00.000', CONCAT(@GALLERYPATH, 'greenvil_1.png'), 'greenvil_1'),
+(4, 1, '', '2023-11-11 01:00:00.000', CONCAT(@GALLERYPATH, 'greenvil_2.png'), 'greenvil_2'),
+(4, 1, '', '2023-11-12 01:00:00.000', CONCAT(@GALLERYPATH, 'greenvil_3.png'), 'greenvil_3'),
+(4, 1, '', '2023-11-13 01:00:00.000', CONCAT(@GALLERYPATH, 'greenvil_4.png'), 'greenvil_4'),
+(4, 1, '', '2023-11-14 01:00:00.000', CONCAT(@GALLERYPATH, 'greenvil_5.png'), 'greenvil_5'),
+(4, 1, '', '2023-11-15 01:00:00.000', CONCAT(@GALLERYPATH, 'greenvil_6.png'), 'greenvil_6'),
+(4, 1, '', '2023-11-16 01:00:00.000', CONCAT(@GALLERYPATH, 'greenvil_7.png'), 'greenvil_7'),
+(4, 1, '', '2023-11-17 01:00:00.000', CONCAT(@GALLERYPATH, 'greenvil_8.png'), 'greenvil_8'),
+(4, 1, '', '2023-11-18 01:00:00.000', CONCAT(@GALLERYPATH, 'greenvil_9.png'), 'greenvil_9'),
+(11, 3, '', '2023-11-10 01:00:00.000', CONCAT(@GALLERYPATH, 'prin7_1.png'), 'prin7_1'),
+(11, 3, '', '2023-11-11 01:00:00.000', CONCAT(@GALLERYPATH, 'prin7_2.png'), 'prin7_2'),
+(11, 3, '', '2023-11-12 01:00:00.000', CONCAT(@GALLERYPATH, 'prin7_3.png'), 'prin7_3'),
+(11, 3, '', '2023-11-13 01:00:00.000', CONCAT(@GALLERYPATH, 'prin7_4.png'), 'prin7_4'),
+(11, 3, '', '2023-11-14 01:00:00.000', CONCAT(@GALLERYPATH, 'prin7_5.png'), 'prin7_5'),
+(8, 2, '', '2023-11-10 01:00:00.000', CONCAT(@GALLERYPATH, 'sick_1.png'), 'sick_1'),
+(8, 2, '', '2023-11-11 01:00:00.000', CONCAT(@GALLERYPATH, 'sick_2.png'), 'sick_2'),
+(8, 2, '', '2023-11-12 01:00:00.000', CONCAT(@GALLERYPATH, 'sick_3.png'), 'sick_3');
+
+-- CREATE TABLE IF NOT EXISTS `wao_db`.`Articles` (
+--   `no_article` INT NOT NULL AUTO_INCREMENT,
+--   `fk-users-articles-no_user` INT NOT NULL,
+--   `fk-parties-articles-no_party` INT NOT NULL,
+--   `content` TINYTEXT NULL,
+--   `reg_date` DATETIME NOT NULL,
+--   `img_path` VARCHAR(300) NULL,
+--   `img_name` VARCHAR(200) NULL
 
 commit ;
 
@@ -399,11 +432,6 @@ WHERE u.`no_user` = 4) sq LEFT JOIN `wao_db`.`USERS_Parties` up
 ON sq.`no_party` = up.`fk-users_parties-no_party`
 WHERE up.`is_accepted` = 0;
 
-
-
-
-
-
 SELECT * FROM
         (SELECT `fk-users_parties-no_party` as no_party, count(*) as `size_current`
         FROM `users_parties`
@@ -420,3 +448,29 @@ SELECT `no_event`, `start_time`, `end_time`, `content`, `fk-parties-events-no_pa
         AND e.`start_time` > NOW() AND e.`start_time` < date_add(NOW(), INTERVAL 7 DAY)) pe LEFT JOIN `wao_db`.`Users_Events` ue
         ON pe.`no_event` = ue.`fk-users_events-no_event`
         GROUP BY `no_event`;
+        
+        
+SELECT `no_user`, `nickname`, a.`img_path`, a.`img_name`, `no_article`, a.`content`, a.`reg_date`
+FROM `wao_db`.`Articles` a
+LEFT JOIN `wao_db`.`Users` u
+ON u.`no_user` = a.`fk-users-articles-no_user`;
+
+SELECT *
+FROM `wao_db`.`Articles` at
+WHERE at.`fk-parties-articles-no_party` = 1
+ORDER BY at.`reg_date` DESC;
+
+SELECT *
+FROM `wao_db`.`Users_Events` ue
+WHERE ue.`fk-users_events-no_user` = 4;
+
+
+SELECT * FROM `wao_db`.`Events`;
+
+SELECT `fk-users_events-no_user` as `no_user`, `fk-parties-events-no_party` as `no_party`, `no_event`, `start_time`, `end_time`, `content`,
+CASE WHEN `end_time` < NOW() THEN 1 ELSE 0 END AS `is_applied`
+FROM 
+(SELECT *
+FROM `wao_db`.`Users_Events` ue
+WHERE ue.`fk-users_events-no_user` = 4) uee LEFT JOIN `wao_db`.`Events` e
+ON uee.`fk-users_events-no_event` = e.`no_event`;

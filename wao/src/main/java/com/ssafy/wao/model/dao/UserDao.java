@@ -1,5 +1,6 @@
 package com.ssafy.wao.model.dao;
 
+import com.ssafy.wao.model.dto.EventDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
 
@@ -72,4 +73,11 @@ public interface UserDao {
     public UserDto validateUserInfo(UserDto userDto);
 
     public int isAuthorized(int userNo);
+
+
+    /*
+        유저의 일정 모두 반환
+        params: int userNo
+     */
+    public List<EventDto> selectAllEvents(int userNo);
 }

@@ -3,6 +3,7 @@ package com.ssafy.wao.model.service;
 import com.ssafy.wao.model.dao.EventDao;
 import com.ssafy.wao.model.dao.PartyDao;
 import com.ssafy.wao.model.dao.UserDao;
+import com.ssafy.wao.model.dto.ArticleDto;
 import com.ssafy.wao.model.dto.EventDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
@@ -83,5 +84,10 @@ public class PartyServiceImpl implements PartyService {
     @Override
     public int validatePartyInfo(PartyDto partyDto) {
         return (partyDao.validatePartyInfo(partyDto) == null) ? 0 : 1;
+    }
+
+    @Override
+    public List<ArticleDto> selectPartyArticle(int partyNo) {
+        return partyDao.selectPartyArticle(partyNo);
     }
 }

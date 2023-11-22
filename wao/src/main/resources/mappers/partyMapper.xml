@@ -36,6 +36,15 @@
         <result property="isApplied" column="is_applied"/>
         <result property="noParticipant" column="no_participant"/>
     </resultMap>
+    <resultMap id="ArticleDtoMap" type="ArticleDto">
+        <id property="articleNo" column="no_article" />
+        <result property="userNo" column="fk-users-articles-no_user"/>
+        <result property="partyNo" column="fk-parties-articles-no_party"/>
+        <result property="content" column="content"/>
+        <result property="regDate" column="reg_date"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="imgName" column="img_name"/>
+    </resultMap>
 
     <insert id="makeParty" parameterType="PartyDto" useGeneratedKeys="true" keyColumn="no_party" keyProperty="partyNo">
         INSERT INTO `wao_db`.`Parties`
@@ -47,9 +56,9 @@
     <insert id="insertPartyMember" parameterType="PartyDto">
         <!-- isAccepted = 같이 넣어 줘야함. -->
         INSERT INTO `wao_db`.`Users_Parties`
-        (`fk-users_parties-no_party`, `fk-users_parties-no_user`, `is_accepted`, `invited_date`, `accepted_date`)
+        (`fk-users_parties-no_party`, `fk-users_parties-no_user`, `is_accepted`, `invited_date`, `accepted_date`, `content`)
         VALUES
-        (#{partyNo}, #{userNo}, #{isAccepted}, #{invitedDate}, #{acceptedDate})
+        (#{partyNo}, #{userNo}, #{isAccepted}, #{invitedDate}, #{acceptedDate}, #{content})
     </insert>
 
     <!--  1개 파티 조회  -->
@@ -139,6 +148,13 @@
         AND e.`start_time` &gt; NOW() AND e.`start_time` &lt; date_add(NOW(), INTERVAL 7 DAY)) pe LEFT JOIN `wao_db`.`Users_Events` ue
         ON pe.`no_event` = ue.`fk-users_events-no_event`
         GROUP BY `no_event`;
+    </select>
+
+    <select id="selectPartyArticle" parameterType="int" resultMap="ArticleDtoMap">
+        SELECT *
+        FROM `wao_db`.`Articles` at
+        WHERE at.`fk-parties-articles-no_party` = #{partyNo}
+        ORDER BY at.`reg_date` DESC;
     </select>
 
     <select id="validatePartyInfo" parameterType="PartyDto" resultMap="PartyDtoMap">
