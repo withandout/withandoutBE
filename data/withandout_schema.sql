@@ -199,10 +199,10 @@ USE `wao_db` ;
 INSERT INTO `wao_db`.`users`
 (`user_id`, `password`, `nickname`, `region`, `gender`, `age`, `content`, `is_authorized`, `img_path`, `img_name`)
 VALUES
-('ssafy1', @PW, '김영섭', '강남구', '남성', 28, '왈왈 크르릉 왈왈', 0, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
+('ssafy1', @PW, '김영섭', '강남구', '남성', 28, '왈왈 크르릉 왈왈', 0, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'), 
 ('ssafy2', @PW, '김예림', '강남구', '여성', 27, '총무 겸 큰손 겸 왕자님 겸 스프링 GOD', 1, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
 ('ssafy3', @PW, '이승헌', '강남구', '남성', 27, '2017년 제주 해녀 선정 올해의 과메기남', 1, CONCAT(@WORKPATH, 'seungheon.png'), 'seungheon.png'),
-('ssafy4', @PW, '조현수', '강남구', '남성', 29, '역삼 음식물 수거 트럭 탈취범', 1, CONCAT(@WORKPATH, 'hyunsoo.png'), 'hyunsoo.png'),
+('ssafy4', @PW, '조현수', '강남구', '남성', 29, '역삼 음식물 수거 트럭 탈취범', 0, CONCAT(@WORKPATH, 'hyunsoo.png'), 'hyunsoo.png'),
 ('ssafy5', @PW, '김병현', '강남구', '남성', 29, '역삼동 팬티도둑', 1, CONCAT(@WORKPATH, 'byeonghyeon.png'), 'byeonghyeon.png'),
 ('ssafy6', @PW, '김종인', '강남구', '남성', 29, '역삼동 발가락', 1, CONCAT(@WORKPATH, 'jongin.png'), 'jongin.png'),
 ('ssafy7', @PW, '석지명', '강남구', '남성', 29, 'IM 이하 연락 금지', 1, CONCAT(@WORKPATH, 'jimyeong.png'), 'jimyeong.png'),
@@ -221,7 +221,6 @@ VALUES
 ('ssafy20', @PW, '정유경', '강남구', '여성', 26, '김병현 김병현', 1, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
 ('ssafy21', @PW, '정현아', '강남구', '여성', 26, '침묵의 007빵', 1, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png'),
 ('ssafy22', @PW, '유현정', '강남구', '여성', 26, '토블론 밀크(노란색)', 1, CONCAT(@WORKPATH, 'defaultUser.png'), 'defaultUser.png');
-
 
 INSERT INTO `wao_db`.`parties` (`name`, `sports`, `region`, `content`, `img_path`, `img_name`, `size_limit`, `fk-users-parties-no_user`)
 VALUES
@@ -268,17 +267,27 @@ VALUES
 ('2023-11-24 18:00:00.000', '2023-11-24 23:00:00.000', '역삼역 하몽하몽', 2),
 ('2023-11-25 07:00:00.000', '2023-11-25 11:00:00.000', '탄천 따라 모닝 러닝', 2),
 ('2023-11-27 12:00:00.000', '2023-11-27 17:00:00.000', '조용환의 맛따라멋따라', 3),
-('2023-11-24 13:00:00.000', '2023-11-24 17:00:00.000', '관악산 백슉먹짜했짜나', 3);
+('2023-11-24 13:00:00.000', '2023-11-24 17:00:00.000', '관악산 백슉먹짜했짜나', 3),
+('2023-11-28 12:00:00.000', '2023-11-28 13:00:00.000', '인승이와 미끄럼틀 탐방', 4),
+('2023-11-30 18:00:00.000', '2023-11-30 20:00:00.000', '지명이와 영혼의 듀얼', 4),
+('2023-12-01 13:00:00.000', '2023-12-01 17:00:00.000', '선영 언니와 MMA 스파링', 4);
 
 INSERT INTO `Users_Events` (`fk-users_events-no_user`, `fk-users_events-no_event`)
 VALUES
 (4, 1),
+(1, 2),
+(1, 7),
+(4, 8),
+(1, 6),
 (4, 3),
 (4, 5),
 (5, 1),
 (5, 4),
 (5, 5),
-(6, 1);
+(6, 1),
+(13, 9),
+(13, 10),
+(13, 11);
 
 INSERT INTO `wao_db`.`Articles`
 (`fk-users-articles-no_user`, `fk-parties-articles-no_party`,
@@ -387,3 +396,26 @@ WHERE u.`no_user` = 4 AND r_log.`stt_time` >= DATE_SUB(NOW(), INTERVAL 7 DAY)
 GROUP BY u.`no_user`;
 
 
+SELECT  `no_user`, `nickname`, sq2.`content`, `age`, `gender`, `img_path`, `name` as partyName, `no_party`
+        FROM
+        (SELECT *
+        FROM
+        (SELECT `no_party`, `name`
+        FROM `wao_db`.`Parties` p
+        LEFT JOIN `wao_db`.`Users` u
+        ON u.`no_user` = p.`fk-users-parties-no_user`
+        WHERE u.`no_user` = 22) sq LEFT JOIN `wao_db`.`USERS_Parties` up
+        ON sq.`no_party` = up.`fk-users_parties-no_party`
+        WHERE up.`is_accepted` = 0) sq2 LEFT JOIN `wao_db`.`Users` u2
+        ON u2.`no_user` = sq2.`fk-users_parties-no_user`;
+
+
+SELECT * FROM `wao_db`.`USERS_parties`;
+
+
+-- 내가 리더인 파티 조회
+SELECT `no_party`, `name`
+        FROM `wao_db`.`Parties` p
+        LEFT JOIN `wao_db`.`Users` u
+        ON u.`no_user` = p.`fk-users-parties-no_user`
+        WHERE u.`no_user` = 22;

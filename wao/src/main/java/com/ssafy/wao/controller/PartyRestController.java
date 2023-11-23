@@ -23,7 +23,7 @@ import java.util.UUID;
 @CrossOrigin("*")
 public class PartyRestController {
 
-    private final String WORKPATH = "src/assets/upload/";
+    private final String WORKPATH = "/src/assets/upload/";
 
     @Autowired
     PartyService partyService;

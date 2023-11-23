@@ -27,7 +27,7 @@ import java.util.UUID;
 @CrossOrigin("*")
 public class UserRestController {
 
-    private final String WORKPATH = "src/assets/upload/";
+    private final String WORKPATH = "/src/assets/upload/";
 
     @Autowired
     UserService userService;
