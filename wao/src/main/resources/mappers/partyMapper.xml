@@ -47,7 +47,7 @@
     </resultMap>
     <resultMap id="LogDtoMap" type="LogDto">
         <id property="logNo" column="no_log" />
-        <result property="userNo" column="user_no"/>
+        <result property="userNo" column="no_user"/>
         <result property="nickname" column="nickname"/>
         <result property="imgPath" column="img_path"/>
         <result property="sttTime" column="stt_time"/>

@@ -2,6 +2,7 @@ package com.ssafy.wao.model.service;
 
 import com.ssafy.wao.model.dao.UserDao;
 import com.ssafy.wao.model.dto.EventDto;
+import com.ssafy.wao.model.dto.LogDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,5 +83,10 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<PartyDto> selectAvailableParty(UserDto userDto) {
         return userDao.selectAvailableParty(userDto);
+    }
+
+    @Override
+    public LogDto getUserRunningLog(int userNo) {
+        return userDao.getUserRunningLog(userNo);
     }
 }

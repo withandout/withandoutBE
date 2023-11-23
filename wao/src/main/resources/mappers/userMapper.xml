@@ -28,6 +28,16 @@
         <result property="sizeCurrent" column="size_current"/>
         <result property="userNo" column="fk-users-parties-no_user"/>
     </resultMap>
+    <resultMap id="LogDtoMap" type="LogDto">
+        <id property="logNo" column="no_log" />
+        <result property="userNo" column="no_user"/>
+        <result property="nickname" column="nickname"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="sttTime" column="stt_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="distance" column="distance"/>
+        <result property="runningCnt" column="running_cnt"/>
+    </resultMap>
     <resultMap id="EventDtoMap" type="EventDto">
         <id property="eventNo" column="no_event" />
         <result property="userNo" column="no_user"/>
@@ -37,6 +47,7 @@
         <result property="sttTime" column="start_time"/>
         <result property="endTime" column="end_time"/>
     </resultMap>
+
 
     <!-- 회원가입 -->
     <insert id="signup" parameterType="UserDto">
@@ -175,5 +186,15 @@
         ) size_table
         ON size_table.`size_table_no_party` = og_table.`no_party`
         WHERE size_table.`size_current` &lt; og_table.`size_limit`;
+    </select>
+
+    <!-- 유저 일주일간 -->
+    <select id="getUserRunningLog" parameterType="int" resultMap="LogDtoMap">
+        SELECT u.`no_user`, SUM(r_log.`distance`) AS distance, COUNT(*) AS running_cnt
+        FROM `wao_db`.`USERS` u
+        LEFT JOIN
+        `wao_db`.`RUNNING_LOG` r_log ON u.`no_user` = r_log.`fk-users-log-no_user`
+        WHERE u.`no_user` = #{userNo} AND r_log.`stt_time` &gt; DATE_SUB(NOW(), INTERVAL 7 DAY)
+        GROUP BY u.`no_user`
     </select>
 </mapper>

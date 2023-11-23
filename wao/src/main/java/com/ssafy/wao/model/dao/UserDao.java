@@ -1,6 +1,7 @@
 package com.ssafy.wao.model.dao;
 
 import com.ssafy.wao.model.dto.EventDto;
+import com.ssafy.wao.model.dto.LogDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
 
@@ -87,4 +88,11 @@ public interface UserDao {
         result : List<PartyDto>
      */
     public List<PartyDto> selectAvailableParty(UserDto userDto);
+
+    /*
+        유저의 일주일간 러닝 기록 조회
+        params : int userNo
+        result : LogDto
+     */
+    public LogDto getUserRunningLog(int userNo);
 }

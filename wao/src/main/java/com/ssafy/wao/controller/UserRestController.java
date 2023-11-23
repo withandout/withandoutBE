@@ -3,6 +3,7 @@ package com.ssafy.wao.controller;
 
 import com.ssafy.wao.model.dao.UserDao;
 import com.ssafy.wao.model.dto.EventDto;
+import com.ssafy.wao.model.dto.LogDto;
 import com.ssafy.wao.model.dto.PartyDto;
 import com.ssafy.wao.model.dto.UserDto;
 import com.ssafy.wao.model.service.UserService;
@@ -207,5 +208,21 @@ public class UserRestController {
             return new ResponseEntity<Void> (HttpStatus.NOT_FOUND);
 
         return new ResponseEntity<List<PartyDto>> (list, HttpStatus.OK);
+    };
+
+    /*
+        유저의 일주일간 운동기록 조회
+        params : int userNo
+        result : LogDto
+     */
+    @GetMapping("log/{userNo}")
+    ResponseEntity<?> getUserRunningLog(@PathVariable int userNo) {
+        LogDto userLog = userService.getUserRunningLog(userNo);
+
+        if (userLog == null) {
+            userLog = new LogDto();
+            userLog.setUserNo(userNo);
+        }
+        return new ResponseEntity<LogDto> (userLog, HttpStatus.OK);
     };
 }

@@ -375,4 +375,15 @@ ON ptmember.`no_user` = r_log.`fk-users-log-no_user`
 WHERE r_log.`stt_time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK) OR `no_log` IS NULL
 GROUP BY ptmember.`no_user`
 ORDER BY distance DESC;
+-- , SUM(distance), COUNT(*)
+
+
+
+SELECT u.`no_user`, SUM(r_log.`distance`) AS distance, COUNT(*) AS running_cnt
+FROM `wao_db`.`USERS` u
+LEFT JOIN
+`wao_db`.`RUNNING_LOG` r_log ON u.`no_user` = r_log.`fk-users-log-no_user`
+WHERE u.`no_user` = 4 AND r_log.`stt_time` >= DATE_SUB(NOW(), INTERVAL 7 DAY)
+GROUP BY u.`no_user`;
+
 
