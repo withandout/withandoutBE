@@ -1,9 +1,6 @@
 package com.ssafy.wao.model.dao;
 
-import com.ssafy.wao.model.dto.ArticleDto;
-import com.ssafy.wao.model.dto.EventDto;
-import com.ssafy.wao.model.dto.PartyDto;
-import com.ssafy.wao.model.dto.UserDto;
+import com.ssafy.wao.model.dto.*;
 
 import java.util.List;
 
@@ -108,4 +105,11 @@ public interface PartyDao {
         result : List<ArticleDto>
      */
     public List<ArticleDto> selectPartyArticle(int partyNo);
+
+    /*
+        파티의 운동 기록 조회.
+        params : int partyNo
+        result : List<LogDto>
+     */
+    public List<LogDto> getPartyRunningLogs(int partyNo);
 }

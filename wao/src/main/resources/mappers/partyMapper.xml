@@ -45,6 +45,16 @@
         <result property="imgPath" column="img_path"/>
         <result property="imgName" column="img_name"/>
     </resultMap>
+    <resultMap id="LogDtoMap" type="LogDto">
+        <id property="logNo" column="no_log" />
+        <result property="userNo" column="user_no"/>
+        <result property="nickname" column="nickname"/>
+        <result property="imgPath" column="img_path"/>
+        <result property="sttTime" column="stt_time"/>
+        <result property="endTime" column="end_time"/>
+        <result property="distance" column="distance"/>
+        <result property="runningCnt" column="running_cnt"/>
+    </resultMap>
 
     <insert id="makeParty" parameterType="PartyDto" useGeneratedKeys="true" keyColumn="no_party" keyProperty="partyNo">
         INSERT INTO `wao_db`.`Parties`
@@ -161,5 +171,24 @@
     <select id="validatePartyInfo" parameterType="PartyDto" resultMap="PartyDtoMap">
         SELECT * FROM `wao_db`.`Parties` p
         WHERE p.`name` = #{name}
+    </select>
+
+    <select id="getPartyRunningLogs" parameterType="int" resultMap="LogDtoMap">
+        SELECT `no_user`, `nickname`, `img_path`,
+        CASE WHEN SUM(`distance`) IS NULL THEN 0
+        ELSE SUM(`distance`) END AS distance, COUNT(*) as running_cnt
+        FROM
+        (SELECT u.`no_user`, `nickname`, `img_path`
+        FROM
+        (SELECT `fk-users_parties-no_user` as `no_user`, `fk-users_parties-no_party` as `no_party`, `is_accepted`
+        FROM `wao_db`.`USERS_Parties` up LEFT JOIN `wao_db`.`parties` p
+        ON up.`fk-users_parties-no_party` = p.`no_party`
+        WHERE p.`no_party` = #{partyNo} AND `is_accepted` = 1) members LEFT JOIN `wao_db`.`Users` u
+        ON members.`no_user` = u.`no_user`) ptmember
+        LEFT JOIN `wao_db`.`RUNNING_LOG` r_log
+        ON ptmember.`no_user` = r_log.`fk-users-log-no_user`
+        WHERE r_log.`stt_time` >= DATE_SUB(NOW(), INTERVAL 1 WEEK) OR `no_log` IS NULL
+        GROUP BY ptmember.`no_user`
+        ORDER BY distance DESC;
     </select>
 </mapper>

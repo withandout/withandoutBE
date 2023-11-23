@@ -1,10 +1,7 @@
 package com.ssafy.wao.controller;
 
 
-import com.ssafy.wao.model.dto.ArticleDto;
-import com.ssafy.wao.model.dto.EventDto;
-import com.ssafy.wao.model.dto.PartyDto;
-import com.ssafy.wao.model.dto.UserDto;
+import com.ssafy.wao.model.dto.*;
 import com.ssafy.wao.model.service.EventService;
 import com.ssafy.wao.model.service.PartyService;
 import io.swagger.annotations.Api;
@@ -114,7 +111,7 @@ public class PartyRestController {
     }
 
     @GetMapping("info/{partyNo}")
-    ResponseEntity<?> selectParty(int partyNo) {
+    ResponseEntity<?> selectParty(@PathVariable int partyNo) {
         PartyDto party = partyService.selectParty(partyNo);
 
         if (party == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
@@ -254,5 +251,17 @@ public class PartyRestController {
         List<ArticleDto> list = partyService.selectPartyArticle(partyNo);
         if (list == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
         return new ResponseEntity<List<ArticleDto>>(list, HttpStatus.OK);
+    };
+
+    /*
+        파티의 운동 기록 조회.
+        params : int partyNo
+        result : List<LogDto>
+     */
+    @GetMapping("log/{partyNo}")
+    ResponseEntity<?>  getPartyRunningLogs(@PathVariable int partyNo) {
+        List<LogDto> list = partyService.getPartyRunningLogs(partyNo);
+        if (list == null) return new ResponseEntity<Void>(HttpStatus.NOT_FOUND);
+        return new ResponseEntity<List<LogDto>>(list, HttpStatus.OK);
     };
 }
